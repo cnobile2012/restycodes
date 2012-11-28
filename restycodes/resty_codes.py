@@ -101,7 +101,6 @@ def getCodeStatus(code):
 
 
 RESTYARGS = {
-    'c999to200': True,
     'serviceAvailable': True,
     'requestUrlTooLong': False,
     'badRequest': False,
@@ -130,6 +129,15 @@ RESTYARGS = {
     'ifUnmodifiedSinceIsValidDate': False,
     'lastModifiedGtIfUnmodifiedSince': False,
     'put': False,
+    'applyToDifferentURI': False,
+    'conflict': False,
+    'newResource': True,
+    'resourcePreviouslyExisted': False,
+    'resourceMovedPermanently': False,
+    'resourceMovedTemporarily': False,
+    'post': True,
+    'permitPostToMissingResource': True,
+    'redirect': False,
     }
 
 
@@ -163,9 +171,6 @@ class RestyCodes(RulesEngine):
             The keyword arguments that are passed to the internal method calls.
         """
         self.dump(**kwargs)
-        # Convert default to a 200
-        c999to200 = kwargs.pop('c999to200')
-        if c999to200 and self._code == self.DEFAULT_CODE: self._code = 200
         return getCodeStatus(self._code)
 
     def setConditions(self, **kwargs):
@@ -320,6 +325,52 @@ class RestyCodes(RulesEngine):
     def _put(self, **kwargs):
         return kwargs.get('put', False)
 
+    def _applyToDifferentURI(self, **kwargs):
+        result = kwargs.get('applyToDifferentURI', False)
+        self._code = result and 301 or self.DEFAULT_CODE
+        return result
+
+    def _conflict(self, **kwargs):
+        result = kwargs.get('conflict', False)
+        self._code = result and 409 or self.DEFAULT_CODE
+        return result
+
+    def _newResource(self, **kwargs):
+        result = kwargs.get('newResource', True)
+        self._code = result and 201 or self.DEFAULT_CODE
+        return result
+
+    def _resourcePreviouslyExisted(self, **kwargs):
+        return kwargs.get('resourcePreviouslyExisted', False)
+
+    def _resourceMovedPermanently(self, **kwargs):
+        result = kwargs.get('resourceMovedPermanently', False)
+        self._code = result and 301 or self.DEFAULT_CODE
+        return result
+
+    def _resourceMovedTemporarily(self, **kwargs):
+        result = kwargs.get('resourceMovedTemporarily', False)
+        self._code = result and 307 or self.DEFAULT_CODE
+        return result
+
+    def _post(self, **kwargs):
+        result = kwargs.get('post', True)
+        resource = kwargs.get('resourcePreviouslyExisted', False)
+        if resource: self._code = result and self.DEFAULT_CODE or 410
+        else: self._code = result and self.DEFAULT_CODE or 404
+        return result
+
+    def _permitPostToMissingResource(self, **kwargs):
+        result = kwargs.get('permitPostToMissingResource', True)
+        resource = kwargs.get('resourcePreviouslyExisted', False)
+        if resource: self._code = result and self.DEFAULT_CODE or 410
+        else: self._code = result and self.DEFAULT_CODE or 404
+        return result
+
+    def _redirect(self, **kwargs):
+        result = kwargs.get('redirect', False)
+        self._code = result and 303 or self.DEFAULT_CODE
+        return result
 
 
 
@@ -329,6 +380,17 @@ class RestyCodes(RulesEngine):
     # [callable,
     #  True -- (callable|None),
     #  False -- (callable|None)]
+
+
+
+    # New Resource
+    nodeNewResource = [_newResource,
+                       None,
+                       None]
+    # Redirect
+    nodeRedirect = [_redirect,
+                    None,
+                    nodeNewResource]
 
     # If Modified Since Exists
     nodeIfUnmodifiedSinceExists = [_ifUnmodifiedSinceExists,
@@ -351,8 +413,26 @@ class RestyCodes(RulesEngine):
                           [_ifMatchAnyExists,
                            None,
                            [_put,
-                            None,
-                            None]]]
+                            [_applyToDifferentURI,
+                             None,
+                             [_conflict,
+                              None,
+                              nodeNewResource]],
+                            [_resourcePreviouslyExisted,
+                              [_resourceMovedPermanently,
+                               None,
+                               [_resourceMovedTemporarily,
+                                None,
+                                [_post,
+                                 [_permitPostToMissingResource,
+                                  nodeRedirect,
+                                  None],
+                                 None]]],
+                              [_post,
+                               [_permitPostToMissingResource,
+                                nodeRedirect,
+                                None],
+                               None]]]]]
 
     # Accept Encoding
     nodeAcceptEncoding = [_acceptEncodingExists,

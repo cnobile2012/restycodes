@@ -50,7 +50,8 @@ class TestRestyCodes(unittest.TestCase):
                           self._rc.setConditions,
                           **replacements)
         # Test for proper operation.
-        self.__runTest(4, 401, {'authorized': False, 'acceptExists': True})
+        self.__runTest(4, 401, {'authorized': False,
+                                'acceptExists': True})
 
     def test_serviceAvailable(self):
         self.__runTest(1, 503, {'serviceAvailable': False})
@@ -83,14 +84,15 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(11, 405, {'commonMethod': False})
 
     def test_knownMethod(self):
-        self.__runTest(11, 501, {'commonMethod': False, 'knownMethod': False})
+        self.__runTest(11, 501, {'commonMethod': False,
+                                 'knownMethod': False})
 
     def test_methodAllowedOnResource(self):
         self.__runTest(11, 405, {'methodAllowedOnResource': False})
 
     @skip(SKIP_MESSAGE)
     def test_acceptExists(self):
-        self.__runTest(0, 999, {'acceptExists': True, 'c999to200': False})
+        self.__runTest(0, 999, {'acceptExists': True})
 
     def test_acceptMediaTypeAvaliable(self):
         self.__runTest(13, 406, {'acceptExists': True,
@@ -98,8 +100,7 @@ class TestRestyCodes(unittest.TestCase):
 
     @skip(SKIP_MESSAGE)
     def test_acceptLanguageExists(self):
-        self.__runTest(0, 999, {'acceptLanguageExists': True,
-                                 'c999to200': False})
+        self.__runTest(0, 999, {'acceptLanguageExists': True})
 
     def test_acceptLanguageAvaliable(self):
         self.__runTest(14, 406, {'acceptLanguageExists': True,
@@ -107,8 +108,7 @@ class TestRestyCodes(unittest.TestCase):
 
     @skip(SKIP_MESSAGE)
     def test_acceptCharacterSetExists(self):
-        self.__runTest(0, 999, {'acceptCharacterSetExists': True,
-                                 'c999to200': False})
+        self.__runTest(0, 999, {'acceptCharacterSetExists': True})
 
     def test_acceptCharacterSetAvaliable(self):
         self.__runTest(15, 406, {'acceptCharacterSetExists': True,
@@ -116,8 +116,7 @@ class TestRestyCodes(unittest.TestCase):
 
     @skip(SKIP_MESSAGE)
     def test_acceptEncodingExists(self):
-        self.__runTest(0, 999, {'acceptEncodingExists': True,
-                                 'c999to200': False})
+        self.__runTest(0, 999, {'acceptEncodingExists': True})
 
     def test_acceptEncodingAvaliable(self):
         self.__runTest(16, 406, {'acceptEncodingExists': True,
@@ -125,24 +124,22 @@ class TestRestyCodes(unittest.TestCase):
 
     @skip(SKIP_MESSAGE)
     def test_resourceExists(self):
-        self.__runTest(0, 999, {'resourceExists': True,
-                                 'c999to200': False})
+        self.__runTest(0, 999, {'resourceExists': True})
 
     @skip(SKIP_MESSAGE)
     def test_ifMatchExists(self):
         self.__runTest(0, 999, {'resourceExists': True})
-        self.__runTest(0, 999, {'resourceExists': True, 'ifMatchExist': True})
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifMatchExist': True})
 
     @skip(SKIP_MESSAGE)
     def test_ifMatchAnyExists(self):
         self.__runTest(17, 412, {'ifMatchAnyExists': True})
         self.__runTest(0, 999, {'resourceExists': True,
-                                'ifMatchExists': True,
-                                'c999to200': False}, calls=True)
+                                'ifMatchExists': True})
         self.__runTest(0, 999, {'resourceExists': True,
                                 'ifMatchExists': True,
-                                'ifMatchAnyExists': False,
-                                'c999to200': False})
+                                'ifMatchAnyExists': False})
 
     def test_eTagInMatch(self):
         self.__runTest(19, 412, {'resourceExists': True,
@@ -152,14 +149,12 @@ class TestRestyCodes(unittest.TestCase):
 
     @skip(SKIP_MESSAGE)
     def test_ifUnmodifiedSinceExists(self):
-        self.__runTest(0, 999, {'ifUnmodifiedSinceExists': True,
-                                'c999to200': False})
+        self.__runTest(0, 999, {'ifUnmodifiedSinceExists': True})
 
     @skip(SKIP_MESSAGE)
     def test_ifUnmodifiedSinceIsValidDate(self):
         self.__runTest(0, 999, {'ifUnmodifiedSinceExists': True,
-                                'ifUnmodifiedSinceIsValidDate': True,
-                                'c999to200': False})
+                                'ifUnmodifiedSinceIsValidDate': True})
 
     def test_lastModifiedGtIfUnmodifiedSince(self):
         self.__runTest(20, 412, {'resourceExists': True,
@@ -167,12 +162,51 @@ class TestRestyCodes(unittest.TestCase):
                                  'ifUnmodifiedSinceIsValidDate': True,
                                  'lastModifiedGtIfUnmodifiedSince': True})
 
-    @skip(SKIP_MESSAGE)
     def test_put(self):
-        self.__runTest(0, 999, {'put': True})
+        self.__runTest(21, 201, {'put': True})
 
-    #def test_
+    def test_applyToDifferentURI(self):
+        self.__runTest(19, 301, {'put': True,
+                                 'applyToDifferentURI': True})
 
+    def test_conflict(self):
+        self.__runTest(20, 409, {'put': True,
+                                 'conflict': True})
+        #self.__runTest(24, 409, (Q14)
+        #self.__runTest(24, 409, (Q14)
+
+    @skip(SKIP_MESSAGE)
+    def test_newResource(self):
+        self.__runTest(0, 999, {'put': True,
+                                'newResource': False})
+
+    @skip(SKIP_MESSAGE)
+    def test_resourcePreviouslyExisted(self):
+        self.__runTest(22, 999, {'resourcePreviouslyExisted': True})
+
+
+    def test_resourceMovedPermanently(self):
+        self.__runTest(20, 301, {'resourcePreviouslyExisted': True,
+                                 'resourceMovedPermanently': True})
+
+    def test_resourceMovedTemporarily(self):
+        self.__runTest(21, 307, {'resourcePreviouslyExisted': True,
+                                 'resourceMovedTemporarily': True})
+
+    def test_post(self):
+        self.__runTest(20, 404, {'post': False})
+        self.__runTest(22, 410, {'resourcePreviouslyExisted': True,
+                                 'post': False})
+
+    def test_permitPostToMissingResource(self):
+        self.__runTest(21, 404, {'permitPostToMissingResource': False})
+        self.__runTest(23, 410, {'resourcePreviouslyExisted': True,
+                                 'permitPostToMissingResource': False})
+
+    def test_redirect(self):
+        self.__runTest(22, 303, {'redirect': True})#, calls=True)
+        self.__runTest(24, 303, {'resourcePreviouslyExisted': True,
+                                 'redirect': True})
 
 
 
