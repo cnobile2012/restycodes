@@ -138,6 +138,16 @@ RESTYARGS = {
     'post': True,
     'permitPostToMissingResource': True,
     'redirect': False,
+    'ifNoneMatchExists': False,
+    'ifNoneMatchAnyExists': False,
+    'eTagInIfNoneMatch': False,
+    'getOrHead': True,
+    'ifModifiedSinceExists': False,
+    'ifModifiedSinceIsValidDate': False,
+    'ifModifiedSinceGtNow': True,
+    'lastModifiedGtIfModifiedSince': True,
+    'delete': False,
+    'deleteEnacted': True,
     }
 
 
@@ -372,6 +382,41 @@ class RestyCodes(RulesEngine):
         self._code = result and 303 or self.DEFAULT_CODE
         return result
 
+    def _ifNoneMatchExists(self, **kwargs):
+        return kwargs.get('ifNoneMatchExists', False)
+
+    def _ifNoneMatchAnyExists(self, **kwargs):
+        return kwargs.get('ifNoneMatchAnyExists', False)
+
+    def _eTagInIfNoneMatch(self, **kwargs):
+        return kwargs.get('eTagInIfNoneMatch', False)
+
+    def _getOrHead(self, **kwargs):
+        result = kwargs.get('getOrHead', True)
+        self._code = result and 304 or 412
+        return result
+
+    def _ifModifiedSinceExists(self, **kwargs):
+        return kwargs.get('ifModifiedSinceExists', False)
+
+    def _ifModifiedSinceIsValidDate(self, **kwargs):
+        return kwargs.get('ifModifiedSinceIsValidDate', False)
+
+    def _ifModifiedSinceGtNow(self, **kwargs):
+        return kwargs.get('ifModifiedSinceGtNow', True)
+
+    def _lastModifiedGtIfModifiedSince(self, **kwargs):
+        result = kwargs.get('lastModifiedGtIfModifiedSince', True)
+        self._code = result and self.DEFAULT_CODE or 304
+        return result
+
+    def _delete(self, **kwargs):
+        return kwargs.get('delete', False)
+
+    def _deleteEnacted(self, **kwargs):
+        result = kwargs.get('deleteEnacted', True)
+        self._code = result and self.DEFAULT_CODE or 202
+        return result
 
 
 
@@ -381,12 +426,47 @@ class RestyCodes(RulesEngine):
     #  True -- (callable|None),
     #  False -- (callable|None)]
 
-
+    # Delete
+    nodeDelete =  [_delete,
+                   [_deleteEnacted,
+                    None,
+                    None],
+                   None]
 
     # New Resource
     nodeNewResource = [_newResource,
                        None,
                        None]
+
+    # Conflict
+    nodeConflict = [_conflict,
+                    None,
+                    nodeNewResource]
+
+    # If Modified Since Exists
+    nodeIfModifiedSinceExists = [_ifModifiedSinceExists,
+                                 [_ifModifiedSinceIsValidDate,
+                                  [_ifModifiedSinceGtNow,
+                                   None,
+                                   [_lastModifiedGtIfModifiedSince,
+                                    None,
+                                    None]],
+                                   nodeDelete],
+                                 nodeDelete]
+
+    # If None Match Exists
+    nodeIfNoneMatchExists = [_ifNoneMatchExists,
+                             [_ifNoneMatchAnyExists,
+                              [_getOrHead,
+                               None,
+                               None],
+                              [_eTagInIfNoneMatch,
+                               [_getOrHead,
+                                None,
+                                None],
+                               nodeIfModifiedSinceExists]],
+                             nodeIfModifiedSinceExists]
+
     # Redirect
     nodeRedirect = [_redirect,
                     None,
@@ -397,9 +477,9 @@ class RestyCodes(RulesEngine):
                                    [_ifUnmodifiedSinceIsValidDate,
                                     [_lastModifiedGtIfUnmodifiedSince,
                                      None,
-                                     None],
-                                    None],
-                                   None]
+                                     nodeIfNoneMatchExists],
+                                    nodeIfNoneMatchExists],
+                                   nodeIfNoneMatchExists]
 
     # Resource Exists
     nodeResourceExists = [_resourceExists,
@@ -415,9 +495,7 @@ class RestyCodes(RulesEngine):
                            [_put,
                             [_applyToDifferentURI,
                              None,
-                             [_conflict,
-                              None,
-                              nodeNewResource]],
+                             nodeConflict],
                             [_resourcePreviouslyExisted,
                               [_resourceMovedPermanently,
                                None,

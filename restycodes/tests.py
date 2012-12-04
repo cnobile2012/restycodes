@@ -90,33 +90,33 @@ class TestRestyCodes(unittest.TestCase):
     def test_methodAllowedOnResource(self):
         self.__runTest(11, 405, {'methodAllowedOnResource': False})
 
-    @skip(SKIP_MESSAGE)
+    #@skip(SKIP_MESSAGE)
     def test_acceptExists(self):
-        self.__runTest(0, 999, {'acceptExists': True})
+        self.__runTest(24, 201, {'acceptExists': True})#, calls=True)
 
     def test_acceptMediaTypeAvaliable(self):
         self.__runTest(13, 406, {'acceptExists': True,
                                  'acceptMediaTypeAvaliable': False})
 
-    @skip(SKIP_MESSAGE)
+    #@skip(SKIP_MESSAGE)
     def test_acceptLanguageExists(self):
-        self.__runTest(0, 999, {'acceptLanguageExists': True})
+        self.__runTest(24, 201, {'acceptLanguageExists': True})#, calls=True)
 
     def test_acceptLanguageAvaliable(self):
         self.__runTest(14, 406, {'acceptLanguageExists': True,
                                  'acceptLanguageAvaliable': False})
 
-    @skip(SKIP_MESSAGE)
+    #@skip(SKIP_MESSAGE)
     def test_acceptCharacterSetExists(self):
-        self.__runTest(0, 999, {'acceptCharacterSetExists': True})
+        self.__runTest(24, 201, {'acceptCharacterSetExists': True})
 
     def test_acceptCharacterSetAvaliable(self):
         self.__runTest(15, 406, {'acceptCharacterSetExists': True,
                                  'acceptCharacterSetAvaliable': False})
 
-    @skip(SKIP_MESSAGE)
+    #@skip(SKIP_MESSAGE)
     def test_acceptEncodingExists(self):
-        self.__runTest(0, 999, {'acceptEncodingExists': True})
+        self.__runTest(24, 201, {'acceptEncodingExists': True})
 
     def test_acceptEncodingAvaliable(self):
         self.__runTest(16, 406, {'acceptEncodingExists': True,
@@ -124,7 +124,7 @@ class TestRestyCodes(unittest.TestCase):
 
     @skip(SKIP_MESSAGE)
     def test_resourceExists(self):
-        self.__runTest(0, 999, {'resourceExists': True})
+        self.__runTest(19, 999, {'resourceExists': True})
 
     @skip(SKIP_MESSAGE)
     def test_ifMatchExists(self):
@@ -208,6 +208,90 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(24, 303, {'resourcePreviouslyExisted': True,
                                  'redirect': True})
 
+    @skip(SKIP_MESSAGE)
+    def test_ifNoneMatchExists(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifNoneMatchExists': True})#, calls=True)
+
+    @skip(SKIP_MESSAGE)
+    def test_ifNoneMatchAnyExists(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifNoneMatchExists': True,
+                                'ifNoneMatchAnyExists': True})#, calls=True)
+
+    @skip(SKIP_MESSAGE)
+    def test_eTagInIfNoneMatch(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifNoneMatchExists': True,
+                                'ifNoneMatchAnyExists': True,
+                                'eTagInIfNoneMatch': True})#, calls=True)
+
+    def test_getOrHead(self):
+        self.__runTest(21, 304, {'resourceExists': True,
+                                 'ifNoneMatchExists': True,
+                                 'ifNoneMatchAnyExists': True,
+                                 'getOrHead': True})#, calls=True)
+        self.__runTest(21, 412, {'resourceExists': True,
+                                 'ifNoneMatchExists': True,
+                                 'ifNoneMatchAnyExists': True,
+                                 'getOrHead': False})#, calls=True)
+        self.__runTest(22, 304, {'resourceExists': True,
+                                 'ifNoneMatchExists': True,
+                                 'eTagInIfNoneMatch': True,
+                                 'getOrHead': True})#, calls=True)
+        self.__runTest(22, 412, {'resourceExists': True,
+                                 'ifNoneMatchExists': True,
+                                 'eTagInIfNoneMatch': True,
+                                 'getOrHead': False})#, calls=True)
+
+    @skip(SKIP_MESSAGE)
+    def test_ifModifiedSinceExists(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifModifiedSinceExists': True})#, calls=True)
+
+    @skip(SKIP_MESSAGE)
+    def test_ifModifiedSinceIsValidDate(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifModifiedSinceExists': True,
+                                'ifModifiedSinceIsValidDate': True})
+
+    @skip(SKIP_MESSAGE)
+    def test_ifModifiedSinceGtNow(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifModifiedSinceExists': True,
+                                'ifModifiedSinceIsValidDate': True,
+                                'ifModifiedSinceGtNow': False})
+
+    def test_lastModifiedGtIfModifiedSince(self):
+        self.__runTest(23, 304, {'resourceExists': True,
+                                 'ifModifiedSinceExists': True,
+                                 'ifModifiedSinceIsValidDate': True,
+                                 'ifModifiedSinceGtNow': False,
+                                 'lastModifiedGtIfModifiedSince': False})
+
+    @skip(SKIP_MESSAGE)
+    def test_delete(self):
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'delete': True})#, calls=True)
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifModifiedSinceExists': True,
+                                'delete': True})#, calls=True)
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifModifiedSinceExists': True,
+                                'ifModifiedSinceIsValidDate': True,
+                                'delete': True})#, calls=True)
+        self.__runTest(0, 999, {'resourceExists': True,
+                                'ifModifiedSinceExists': True,
+                                'ifModifiedSinceIsValidDate': True,
+                                'ifModifiedSinceGtNow': False,
+                                'delete': True})#, calls=True)
+
+    def test_deleteEnacted(self):
+        self.__runTest(22, 202, {'resourceExists': True,
+                                 'delete': True,
+                                 'deleteEnacted': False})#, calls=True)
+
+
 
 
 
@@ -228,6 +312,7 @@ class TestRestyCodes(unittest.TestCase):
     def __printCalls(self, calls=False):
         if calls:
             seq = self._rc.getCallSequence()
+            print
 
             for call in seq:
                 print call.__name__
