@@ -426,13 +426,6 @@ class RestyCodes(RulesEngine):
     #  True -- (callable|None),
     #  False -- (callable|None)]
 
-    # Delete
-    nodeDelete =  [_delete,
-                   [_deleteEnacted,
-                    None,
-                    None],
-                   None]
-
     # New Resource
     nodeNewResource = [_newResource,
                        None,
@@ -443,15 +436,47 @@ class RestyCodes(RulesEngine):
                     None,
                     nodeNewResource]
 
+    # Redirect
+    nodeRedirect = [_redirect,
+                    None,
+                    nodeNewResource]
+
+    # Post
+    nodePost = [_post,
+                [_permitPostToMissingResource,
+                 nodeRedirect,
+                 None],
+                None]
+
+    # Put
+    nodePut = [_put,
+               [_applyToDifferentURI,
+                None,
+                nodeConflict],
+               [_resourcePreviouslyExisted,
+                [_resourceMovedPermanently,
+                 None,
+                 [_resourceMovedTemporarily,
+                  None,
+                  nodePost]],
+                nodePost]]
+
+    # Delete
+    nodeDelete =  [_delete,
+                   [_deleteEnacted,
+                    None,
+                    None],
+                   nodePut]
+
     # If Modified Since Exists
     nodeIfModifiedSinceExists = [_ifModifiedSinceExists,
                                  [_ifModifiedSinceIsValidDate,
                                   [_ifModifiedSinceGtNow,
-                                   None,
+                                   nodeDelete,
                                    [_lastModifiedGtIfModifiedSince,
-                                    None,
+                                    nodeDelete,
                                     None]],
-                                   nodeDelete],
+                                  nodeDelete],
                                  nodeDelete]
 
     # If None Match Exists
@@ -466,11 +491,6 @@ class RestyCodes(RulesEngine):
                                 None],
                                nodeIfModifiedSinceExists]],
                              nodeIfModifiedSinceExists]
-
-    # Redirect
-    nodeRedirect = [_redirect,
-                    None,
-                    nodeNewResource]
 
     # If Modified Since Exists
     nodeIfUnmodifiedSinceExists = [_ifUnmodifiedSinceExists,
@@ -492,25 +512,7 @@ class RestyCodes(RulesEngine):
                            nodeIfUnmodifiedSinceExists],
                           [_ifMatchAnyExists,
                            None,
-                           [_put,
-                            [_applyToDifferentURI,
-                             None,
-                             nodeConflict],
-                            [_resourcePreviouslyExisted,
-                              [_resourceMovedPermanently,
-                               None,
-                               [_resourceMovedTemporarily,
-                                None,
-                                [_post,
-                                 [_permitPostToMissingResource,
-                                  nodeRedirect,
-                                  None],
-                                 None]]],
-                              [_post,
-                               [_permitPostToMissingResource,
-                                nodeRedirect,
-                                None],
-                               None]]]]]
+                           nodePut]]
 
     # Accept Encoding
     nodeAcceptEncoding = [_acceptEncodingExists,
