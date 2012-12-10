@@ -131,7 +131,7 @@ RESTYARGS = {
     'put': False,
     'applyToDifferentURI': False,
     'conflict': False,
-    'newResource': True,
+    'newResourceCreated': True,
     'resourcePreviouslyExisted': False,
     'resourceMovedPermanently': False,
     'resourceMovedTemporarily': False,
@@ -148,6 +148,7 @@ RESTYARGS = {
     'lastModifiedGtIfModifiedSince': True,
     'delete': False,
     'deleteEnacted': True,
+    'responseIncludesAnEntity': True,
     }
 
 
@@ -345,8 +346,8 @@ class RestyCodes(RulesEngine):
         self._code = result and 409 or self.DEFAULT_CODE
         return result
 
-    def _newResource(self, **kwargs):
-        result = kwargs.get('newResource', True)
+    def _newResourceCreated(self, **kwargs):
+        result = kwargs.get('newResourceCreated', True)
         self._code = result and 201 or self.DEFAULT_CODE
         return result
 
@@ -418,6 +419,14 @@ class RestyCodes(RulesEngine):
         self._code = result and self.DEFAULT_CODE or 202
         return result
 
+    def _responseIncludesAnEntity(self, **kwargs):
+        result = kwargs.get('responseIncludesAnEntity', True)
+        delete = kwargs.get('delete', False)
+        if delete: self._code = result and self.DEFAULT_CODE or 204
+        else: self._code = result and 202 or 204
+        return result
+
+
 
 
 
@@ -426,20 +435,22 @@ class RestyCodes(RulesEngine):
     #  True -- (callable|None),
     #  False -- (callable|None)]
 
-    # New Resource
-    nodeNewResource = [_newResource,
-                       None,
-                       None]
+    # New Resource Created
+    nodeNewResourceCreated = [_newResourceCreated,
+                              None,
+                              [_responseIncludesAnEntity,
+                               None,
+                               None]]
 
     # Conflict
     nodeConflict = [_conflict,
                     None,
-                    nodeNewResource]
+                    nodeNewResourceCreated]
 
     # Redirect
     nodeRedirect = [_redirect,
                     None,
-                    nodeNewResource]
+                    nodeNewResourceCreated]
 
     # Post
     nodePost = [_post,
@@ -464,7 +475,9 @@ class RestyCodes(RulesEngine):
     # Delete
     nodeDelete =  [_delete,
                    [_deleteEnacted,
-                    None,
+                    [_responseIncludesAnEntity,
+                     None,
+                     None],
                     None],
                    nodePut]
 

@@ -175,14 +175,15 @@ class TestRestyCodes(unittest.TestCase):
         #self.__runTest(24, 409, (Q14)
         #self.__runTest(24, 409, (Q14)
 
-    @skip(SKIP_MESSAGE)
-    def test_newResource(self):
-        self.__runTest(0, 999, {'put': True,
-                                'newResource': False})
+    #@skip(SKIP_MESSAGE)
+    def test_newResourceCreated(self):
+        self.__runTest(24, 202, {'newResourceCreated': False})#, calls=True)
+        self.__runTest(22, 202, {'put': True,
+                                 'newResourceCreated': False})#, calls=True)
 
     @skip(SKIP_MESSAGE)
     def test_resourcePreviouslyExisted(self):
-        self.__runTest(22, 999, {'resourcePreviouslyExisted': True})
+        self.__runTest(25, 999, {'resourcePreviouslyExisted': True}, calls=True)
 
 
     def test_resourceMovedPermanently(self):
@@ -291,7 +292,13 @@ class TestRestyCodes(unittest.TestCase):
                                  'delete': True,
                                  'deleteEnacted': False})#, calls=True)
 
-
+    def test_responseIncludesAnEntity(self):
+        self.__runTest(22, 204, {'put': True,
+                                 'newResourceCreated': False,
+                                 'responseIncludesAnEntity': False})#, calls=True)
+        self.__runTest(23, 204, {'resourceExists': True,
+                                 'delete': True,
+                                 'responseIncludesAnEntity': False})#, calls=True)
 
 
 
