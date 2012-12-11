@@ -312,9 +312,11 @@ class RestyCodes(RulesEngine):
         return kwargs.get('ifMatchExists', False)
 
     def _ifMatchAnyExists(self, **kwargs):
-        resource = kwargs.get('resourceExists', False)
         result = kwargs.get('ifMatchAnyExists', False)
-        if not resource: self._code = result and 412 or self.DEFAULT_CODE
+
+        if not kwargs.get('resourceExists', False):
+            self._code = result and 412 or self.DEFAULT_CODE
+
         return result
 
     def _eTagInMatch(self, **kwargs):
@@ -366,16 +368,23 @@ class RestyCodes(RulesEngine):
 
     def _post(self, **kwargs):
         result = kwargs.get('post', True)
-        resource = kwargs.get('resourcePreviouslyExisted', False)
-        if resource: self._code = result and self.DEFAULT_CODE or 410
-        else: self._code = result and self.DEFAULT_CODE or 404
+
+        if not kwargs.get('resourceExists', False):
+            if kwargs.get('resourcePreviouslyExisted', False):
+                self._code = result and self.DEFAULT_CODE or 410
+            else:
+                self._code = result and self.DEFAULT_CODE or 404
+
         return result
 
     def _permitPostToMissingResource(self, **kwargs):
         result = kwargs.get('permitPostToMissingResource', True)
-        resource = kwargs.get('resourcePreviouslyExisted', False)
-        if resource: self._code = result and self.DEFAULT_CODE or 410
-        else: self._code = result and self.DEFAULT_CODE or 404
+
+        if kwargs.get('resourcePreviouslyExisted', False):
+            self._code = result and self.DEFAULT_CODE or 410
+        else:
+            self._code = result and self.DEFAULT_CODE or 404
+
         return result
 
     def _redirect(self, **kwargs):
@@ -421,9 +430,12 @@ class RestyCodes(RulesEngine):
 
     def _responseIncludesAnEntity(self, **kwargs):
         result = kwargs.get('responseIncludesAnEntity', True)
-        delete = kwargs.get('delete', False)
-        if delete: self._code = result and self.DEFAULT_CODE or 204
-        else: self._code = result and 202 or 204
+
+        if kwargs.get('delete', False):
+            self._code = result and self.DEFAULT_CODE or 204
+        else:
+            self._code = result and 202 or 204
+
         return result
 
 

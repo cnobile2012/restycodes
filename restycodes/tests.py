@@ -181,9 +181,9 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(22, 202, {'put': True,
                                  'newResourceCreated': False})#, calls=True)
 
-    @skip(SKIP_MESSAGE)
+    #@skip(SKIP_MESSAGE)
     def test_resourcePreviouslyExisted(self):
-        self.__runTest(25, 999, {'resourcePreviouslyExisted': True}, calls=True)
+        self.__runTest(25, 201, {'resourcePreviouslyExisted': True})#, calls=True)
 
 
     def test_resourceMovedPermanently(self):
