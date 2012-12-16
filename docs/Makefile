@@ -5,13 +5,13 @@
 #
 # This Makefile generates the Resty Code API documtation.
 #
+include ../include.mk
 
 FQDN		= $(shell hostname --fqdn)
 DOC_DIR		= $(shell pwd)
 API_DIR		= rcapi
 URL		= http://${FQDN}${DOC_DIR}/${API_DIR}/index.html
 TARBALL_NAME	= RestyCodesDocs
-DOC_NAME	= http-headers-status-CJN-v1.0
 
 all	: pdf api-docs
 #----------------------------------------------------------------------
@@ -22,7 +22,7 @@ api-docs:
          )
 
 pdf	:
-	@dia -e ${DOC_NAME}.pdf ${DOC_NAME}.dia
+	@dia -e ${DIAGRAM_NAME}-${DIA_VERSION}.pdf ${DIAGRAM_NAME}.dia
 
 #----------------------------------------------------------------------
 tar	:
