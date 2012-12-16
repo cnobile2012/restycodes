@@ -12,5 +12,5 @@ VERSION		= ${MAJORVERSION}.${MINORVERSION}.${PATCHLEVEL}
 # HTTP Header Status version info
 DIA_MAJORVER	= 1
 DIA_MINORVER	= 0
-DIAGRAM_NAME	= http-headers-status-CJN
+DIAGRAM_NAME	= http-headers-status-CJN-v
 DIA_VERSION	= ${DIA_MAJORVER}.${DIA_MINORVER}

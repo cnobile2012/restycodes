@@ -22,7 +22,8 @@ api-docs:
          )
 
 pdf	:
-	@dia -e ${DIAGRAM_NAME}-${DIA_VERSION}.pdf ${DIAGRAM_NAME}.dia
+	@dia -e ${DIAGRAM_NAME}${DIA_VERSION}.pdf \
+         ${DIAGRAM_NAME}${DIA_VERSION}.dia
 
 #----------------------------------------------------------------------
 tar	:
