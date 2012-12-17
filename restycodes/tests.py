@@ -90,33 +90,29 @@ class TestRestyCodes(unittest.TestCase):
     def test_methodAllowedOnResource(self):
         self.__runTest(11, 405, {'methodAllowedOnResource': False})
 
-    #@skip(SKIP_MESSAGE)
     def test_acceptExists(self):
-        self.__runTest(24, 201, {'acceptExists': True})#, calls=True)
+        self.__runTest(27, 200, {'acceptExists': True})#, calls=True)
 
     def test_acceptMediaTypeAvaliable(self):
         self.__runTest(13, 406, {'acceptExists': True,
                                  'acceptMediaTypeAvaliable': False})
 
-    #@skip(SKIP_MESSAGE)
     def test_acceptLanguageExists(self):
-        self.__runTest(24, 201, {'acceptLanguageExists': True})#, calls=True)
+        self.__runTest(27, 200, {'acceptLanguageExists': True})#, calls=True)
 
     def test_acceptLanguageAvaliable(self):
         self.__runTest(14, 406, {'acceptLanguageExists': True,
                                  'acceptLanguageAvaliable': False})
 
-    #@skip(SKIP_MESSAGE)
     def test_acceptCharacterSetExists(self):
-        self.__runTest(24, 201, {'acceptCharacterSetExists': True})
+        self.__runTest(27, 200, {'acceptCharacterSetExists': True})
 
     def test_acceptCharacterSetAvaliable(self):
         self.__runTest(15, 406, {'acceptCharacterSetExists': True,
                                  'acceptCharacterSetAvaliable': False})
 
-    #@skip(SKIP_MESSAGE)
     def test_acceptEncodingExists(self):
-        self.__runTest(24, 201, {'acceptEncodingExists': True})
+        self.__runTest(27, 200, {'acceptEncodingExists': True})
 
     def test_acceptEncodingAvaliable(self):
         self.__runTest(16, 406, {'acceptEncodingExists': True,
@@ -163,27 +159,34 @@ class TestRestyCodes(unittest.TestCase):
                                  'lastModifiedGtIfUnmodifiedSince': True})
 
     def test_put(self):
-        self.__runTest(21, 201, {'put': True})
+        self.__runTest(27, 200, {'resourceExists': True,
+                                 'put': True})
+        self.__runTest(21, 201, {'resourceExists': False,
+                                 'put': True})
 
     def test_applyToDifferentURI(self):
-        self.__runTest(19, 301, {'put': True,
+        self.__runTest(19, 301, {'resourceExists': False,
+                                 'put': True,
                                  'applyToDifferentURI': True})
 
     def test_conflict(self):
-        self.__runTest(20, 409, {'put': True,
+        self.__runTest(24, 409, {'resourceExists': True,
+                                 'put': True,
                                  'conflict': True})
-        #self.__runTest(24, 409, (Q14)
-        #self.__runTest(24, 409, (Q14)
+        self.__runTest(20, 409, {'resourceExists': False,
+                                 'put': True,
+                                 'conflict': True})#, calls=True)
 
-    #@skip(SKIP_MESSAGE)
     def test_newResourceCreated(self):
-        self.__runTest(24, 202, {'newResourceCreated': False})#, calls=True)
-        self.__runTest(22, 202, {'put': True,
+        self.__runTest(22, 202, {'resourceExists': False,
+                                 'put': True,
+                                 'newResourceCreated': False})#, calls=True)
+        self.__runTest(24, 202, {'resourceExists': False,
+                                 'post': True,
                                  'newResourceCreated': False})#, calls=True)
 
-    #@skip(SKIP_MESSAGE)
     def test_resourcePreviouslyExisted(self):
-        self.__runTest(25, 201, {'resourcePreviouslyExisted': True})#, calls=True)
+        self.__runTest(25, 201, {'resourcePreviouslyExisted': True})
 
 
     def test_resourceMovedPermanently(self):
@@ -194,20 +197,36 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(21, 307, {'resourcePreviouslyExisted': True,
                                  'resourceMovedTemporarily': True})
 
+    #@skip(SKIP_MESSAGE)
     def test_post(self):
-        self.__runTest(20, 404, {'post': False})
-        self.__runTest(22, 410, {'resourcePreviouslyExisted': True,
-                                 'post': False})
+        self.__runTest(23, 201, {'resourceExists': False,
+                                 'post': True})
+        self.__runTest(25, 201, {'resourceExists': False,
+                                 'resourcePreviouslyExisted': True,
+                                 'post': True})#, calls=True)
 
     def test_permitPostToMissingResource(self):
-        self.__runTest(21, 404, {'permitPostToMissingResource': False})
-        self.__runTest(23, 410, {'resourcePreviouslyExisted': True,
-                                 'permitPostToMissingResource': False})
+        self.__runTest(21, 404, {'resourceExists': False,
+                                 'post': True,
+                                 'permitPostToMissingResource': False})#, calls=True)
+        self.__runTest(23, 410, {'resourceExists': False,
+                                 'resourcePreviouslyExisted': True,
+                                 'post': True,
+                                 'permitPostToMissingResource': False})#, calls=True)
 
     def test_redirect(self):
-        self.__runTest(22, 303, {'redirect': True})#, calls=True)
-        self.__runTest(24, 303, {'resourcePreviouslyExisted': True,
-                                 'redirect': True})
+        self.__runTest(23, 303, {'resourceExists': True,
+                                 'post': True,
+                                 'redirect': True})#, calls=True)
+        self.__runTest(23, 303, {'resourceExists': True,
+                                 'resourcePreviouslyExisted': True,
+                                 'post': True,
+                                 'permitPostToMissingResource': True,
+                                 'redirect': True})#, calls=True)
+        self.__runTest(23, 303, {'resourceExists': True,
+                                 'post': True,
+                                 'permitPostToMissingResource': True,
+                                 'redirect': True})#, calls=True)
 
     @skip(SKIP_MESSAGE)
     def test_ifNoneMatchExists(self):
@@ -287,10 +306,10 @@ class TestRestyCodes(unittest.TestCase):
                                 'ifModifiedSinceGtNow': False,
                                 'delete': True})#, calls=True)
 
-    def test_deleteEnacted(self):
+    def test_methodEnacted(self):
         self.__runTest(22, 202, {'resourceExists': True,
                                  'delete': True,
-                                 'deleteEnacted': False})#, calls=True)
+                                 'methodEnacted': False})#, calls=True)
 
     def test_responseIncludesAnEntity(self):
         self.__runTest(22, 204, {'put': True,
@@ -299,6 +318,22 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(23, 204, {'resourceExists': True,
                                  'delete': True,
                                  'responseIncludesAnEntity': False})#, calls=True)
+
+    def test_multipleRepresentation(self):
+        self.__runTest(24, 300, {'resourceExists': True,
+                                 'delete': True,
+                                 'multipleRepresentation': True})#, calls=True)
+        self.__runTest(26, 300, {'resourceExists': True,
+                                 'post': True,
+                                 'multipleRepresentation': True})#, calls=True)
+        self.__runTest(27, 300, {'resourceExists': True,
+                                 'put': True,
+                                 'multipleRepresentation': True})#, calls=True)
+        self.__runTest(26, 300, {'resourceExists': True,
+                                 'multipleRepresentation': True})#, calls=True)
+
+
+
 
 
 

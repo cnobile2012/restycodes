@@ -121,7 +121,7 @@ RESTYARGS = {
     'acceptCharacterSetAvaliable': True,
     'acceptEncodingExists': False,
     'acceptEncodingAvaliable': True,
-    'resourceExists': False,
+    'resourceExists': True,
     'ifMatchExists': False,
     'ifMatchAnyExists': False,
     'eTagInMatch': True,
@@ -135,7 +135,7 @@ RESTYARGS = {
     'resourcePreviouslyExisted': False,
     'resourceMovedPermanently': False,
     'resourceMovedTemporarily': False,
-    'post': True,
+    'post': False,
     'permitPostToMissingResource': True,
     'redirect': False,
     'ifNoneMatchExists': False,
@@ -147,8 +147,9 @@ RESTYARGS = {
     'ifModifiedSinceGtNow': True,
     'lastModifiedGtIfModifiedSince': True,
     'delete': False,
-    'deleteEnacted': True,
+    'methodEnacted': True,
     'responseIncludesAnEntity': True,
+    'multipleRepresentation': False,
     }
 
 
@@ -306,7 +307,7 @@ class RestyCodes(RulesEngine):
         return result
 
     def _resourceExists(self, **kwargs):
-        return kwargs.get('resourceExists', False)
+        return kwargs.get('resourceExists', True)
 
     def _ifMatchExists(self, **kwargs):
         return kwargs.get('ifMatchExists', False)
@@ -367,7 +368,7 @@ class RestyCodes(RulesEngine):
         return result
 
     def _post(self, **kwargs):
-        result = kwargs.get('post', True)
+        result = kwargs.get('post', False)
 
         if not kwargs.get('resourceExists', False):
             if kwargs.get('resourcePreviouslyExisted', False):
@@ -423,8 +424,8 @@ class RestyCodes(RulesEngine):
     def _delete(self, **kwargs):
         return kwargs.get('delete', False)
 
-    def _deleteEnacted(self, **kwargs):
-        result = kwargs.get('deleteEnacted', True)
+    def _methodEnacted(self, **kwargs):
+        result = kwargs.get('methodEnacted', True)
         self._code = result and self.DEFAULT_CODE or 202
         return result
 
@@ -438,6 +439,11 @@ class RestyCodes(RulesEngine):
 
         return result
 
+    def _multipleRepresentation(self, **kwargs):
+         result = kwargs.get('multipleRepresentation', False)
+         self._code = result and 300 or 200
+         return result
+
 
 
 
@@ -446,6 +452,15 @@ class RestyCodes(RulesEngine):
     # [callable,
     #  True -- (callable|None),
     #  False -- (callable|None)]
+
+    # Method Enacted
+    nodeMethodEnacted = [_methodEnacted,
+                         [_responseIncludesAnEntity,
+                          [_multipleRepresentation,
+                           None,
+                           None],
+                          None],
+                         None]
 
     # New Resource Created
     nodeNewResourceCreated = [_newResourceCreated,
@@ -459,15 +474,12 @@ class RestyCodes(RulesEngine):
                     None,
                     nodeNewResourceCreated]
 
-    # Redirect
-    nodeRedirect = [_redirect,
-                    None,
-                    nodeNewResourceCreated]
-
     # Post
     nodePost = [_post,
                 [_permitPostToMissingResource,
-                 nodeRedirect,
+                 [_redirect,
+                  None,
+                  nodeNewResourceCreated],
                  None],
                 None]
 
@@ -486,12 +498,16 @@ class RestyCodes(RulesEngine):
 
     # Delete
     nodeDelete =  [_delete,
-                   [_deleteEnacted,
-                    [_responseIncludesAnEntity,
+                   nodeMethodEnacted,
+                   [_post,
+                    [_redirect,
                      None,
-                     None],
-                    None],
-                   nodePut]
+                     nodeMethodEnacted],
+                    [_put,
+                     [_conflict,
+                      None,
+                      nodeMethodEnacted],
+                     nodeMethodEnacted]]]
 
     # If Modified Since Exists
     nodeIfModifiedSinceExists = [_ifModifiedSinceExists,
