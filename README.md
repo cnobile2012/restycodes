@@ -23,14 +23,15 @@ errors.
    HEAD method with regards to a 202, but I see no reason why a 202 should
    also not be possible.
 
-2) Another issue I have with Alen Dean's diagram is that updates are routed
+2) Another possible issue with Alen Dean's diagram is that updates are routed
    through the "New resource" condition. An update by definition would never
    create a new resource, so why does it go through this condition? My diagram
-   does not make this link at all. You will see that in my diagram the create
-   and update conditions are completely separate making the diagram simpler.
+   does not take this route at all. The create and update conditions are
+   completely separate and, I feel, making the diagram simpler.
 
-3) I renamed the decision "New resource" to "New resource created". Though not
-   an error I beleive this name changes makes the decision clearer.
+3) The decision "New resource" was renamed to "New resource created". Though
+   not an error I believe this name change makes the purpose of the decision
+   clearer.
 
 Diagram Notes
 -------------
@@ -39,9 +40,10 @@ Diagram Notes
    is where an updated or a created resource is determined.
 2) A point of confusion is what does B32 actually do? This is a decision
    that would be made by the origin server as to weather or not a resource
-   existed on a URI at one time or not. The result may be a 301, 307, 410, or
-   a new resource created on a missing resource by a POST method.
+   existed on a URI at a time in the past or not. The response may be a 301,
+   307, 410, or a new resource created on a missing resource by the POST
+   method.
 
-I would love comments and descussion on this topic.
+Comments and discussion on this topic are welcome. Please contact me at:
 
-My email is carl dot nobile at gmail.com
+carl dot nobile at gmail.com
