@@ -38,11 +38,57 @@ Diagram Notes
 
 1) The major decision point in the diagram is at G7 (Resource exists?). Here
    is where an updated or a created resource is determined.
+
 2) A point of confusion is what does B32 actually do? This is a decision
    that would be made by the origin server as to weather or not a resource
    existed on a URI at a time in the past or not. The response may be a 301,
    307, 410, or a new resource created on a missing resource by the POST
    method.
+
+The Python Code
+---------------
+
+There are actually two apps in one in Resty Codes. The Rules Engine and Resty
+Codes itself.
+
+1) Rules Engine
+
+The decision making process is the Rules Engine which is written around a 
+binary tree. It can be used completely independently of Resty Codes. The 
+RulesEngine class can either be inherited or a composite in your class.
+
+There are four exposed methods:
+
+RulesEngine.load(seq) -- Loads the sequence (seq) into Node objects, later 
+used when dump is called. The root Node of the binary tree is returned.
+
+RulesEngine.dump(**kwargs) -- Executes the binary tree applying the keyword 
+arguments to the methods in the Nodes. The return value is the boolean of the 
+first object executed. This is somewhat usless, but could come in handy.
+
+RulesEngine.getIterationCount() -- Returns the actual decision tree count for 
+the kwargs passed to the dump methos. Used mostly for debugging.
+
+RulesEngine.getCallSequence() -- Returns a list of the methods that were 
+executes in the order of execution. Used mostly for debugging.
+
+2) Resty Codes
+
+STATUS_CODE_MAP -- 
+
+
+RESTYARGS --
+
+
+getCodeStatus(code) --
+
+
+RestyCodes.getStatus(**kwargs) -- 
+
+
+RestyCodes.setConditions(**kwargs) -- 
+
+
 
 Comments and discussion on this topic are welcome. Please contact me at:
 
