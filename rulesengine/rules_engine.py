@@ -124,6 +124,9 @@ class RulesEngine(object):
           kwargs : `dict`
             The possible keyword arguments that shall be passed to the
             callable objects in the `Node` objects.
+
+        :Returns:
+          The Boolean from first callable object.
         """
         self._reset()
         return self.__extract(self._root, **kwargs)
