@@ -63,25 +63,24 @@ RulesEngine.load(seq) -- Loads the sequence (seq) into Node objects, later
 used when dump is called. The root Node of the binary tree is returned.
 
 RulesEngine.dump(**kwargs) -- Executes the binary tree applying the keyword 
-arguments to the methods in the Nodes. The return value is the boolean of the 
-first object executed. This is somewhat usless, but could come in handy.
+arguments to the methods in the Nodes. The return value is the Boolean of the 
+first object executed. This is somewhat useless, but could come in handy.
 
 RulesEngine.getIterationCount() -- Returns the actual decision tree count for 
-the kwargs passed to the dump methos. Used mostly for debugging.
+the kwargs passed to the dump methods. Used mostly for debugging.
 
 RulesEngine.getCallSequence() -- Returns a list of the methods that were 
 executes in the order of execution. Used mostly for debugging.
 
 2) Resty Codes
 
-STATUS_CODE_MAP -- 
+STATUS_CODE_MAP -- A module dictionary object that holds all the response codes.
 
+RESTYARGS -- A module dictionary object that defines the 49 keyword objects and 
+their default Boolean value.
 
-RESTYARGS --
-
-
-getCodeStatus(code) --
-
+getCodeStatus(code) -- A module function that creates a tuple of the code and 
+status text.
 
 RestyCodes.getStatus(**kwargs) -- 
 
