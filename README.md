@@ -54,7 +54,7 @@ The Python Code
 There are actually two apps in one in Resty Codes. The Rules Engine and Resty
 Codes itself.
 
-1. Rules Engine
+### Rules Engine
 
 The decision making process is the Rules Engine which is written around a 
 binary tree. It can be used completely independently of Resty Codes. The 
@@ -75,7 +75,7 @@ the kwargs passed to the dump methods. Used mostly for debugging.
 RulesEngine.getCallSequence() -- Returns a list of the methods that were 
 executes in the order of execution. Used mostly for debugging.
 
-2. Resty Codes
+### Resty Codes
 
 STATUS_CODE_MAP -- A module dictionary object that holds all the response codes.
 
