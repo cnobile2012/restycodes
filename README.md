@@ -18,13 +18,16 @@ errors.
 1) After reading everything I could get my hands on I have never found an
    reference to why a 202 Accepted could not be in a response to a GET, HEAD,
    POST, or PUT though Alen seems to only allow this in the case of a DELETE.
-   In the RFC-2616 10.2.2 (201 Created) it says that "the server SHOULD respond
-   with 202 (Accepted) response". There is no mention in the RFC about a GET or
-   HEAD method with regards to a 202, but I see no reason why a 202 should
-   also not be possible.
+   In the RFC-2616 10.2.2 (201 Created) it says that "If the action cannot be 
+   carried out immediately, the server SHOULD respond with 202 (Accepted) 
+   response". Therefore both a PUT and POST can cause a 202 in the response. 
+   There is no mention in the RFC about a GET or HEAD method with regards to 
+   a 202, but I see no reason why a 202 should not be possible. Consider a 
+   situation where the origin server is not able to fulfill a GET or HEAD 
+   request immediately.
 
 2) Another possible issue with Alen Dean's diagram is that updates are routed
-   through the "New resource" condition. An update by definition would never
+   through P11 (New resource) condition. An update by definition would never
    create a new resource, so why does it go through this condition? My diagram
    does not take this route at all. The create and update conditions are
    completely separate and, I feel, making the diagram simpler.
@@ -82,12 +85,12 @@ their default Boolean value.
 getCodeStatus(code) -- A module function that creates a tuple of the code and 
 status text.
 
-RestyCodes.getStatus(**kwargs) -- Returns a tuple cantaining the status code and
+RestyCodes.getStatus(**kwargs) -- Returns a tuple containing the status code and
 the status description. eg. (200, "OK")
 
-RestyCodes.setConditions(**kwargs) -- A convience method that sets the argument 
-kwargs in a copy of RESTYARGS. The returned kwargs are sutable for passing 
-into RestyCodes.getStatus(**kwargs).
+RestyCodes.setConditions(**kwargs) -- A convenience method that sets the 
+argument kwargs in a copy of RESTYARGS. The returned kwargs are suitable for 
+passing into RestyCodes.getStatus(**kwargs).
 
 --------------------------------------------------------------------------------
 
