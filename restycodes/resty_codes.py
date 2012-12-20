@@ -19,71 +19,77 @@ from rulesengine import RulesEngine
 
 STATUS_CODE_MAP = {
     # Informational
-    100: "Continue",
-    101: "Switching Protocols",
-    102: "Processing",
-    103: "Access denied while creating Web Service",
-    104: "File Format or Program Error",
+    100: "Continue",                               # Not implemented (RFC-2616)
+    101: "Switching Protocols",                    # Not implemented (RFC-2616)
+    102: "Processing",                             # Not implemented (RFC-2518)
+    103: "Access denied while creating Web Service", # Not implemented
+    104: "File Format or Program Error",           # Not implemented
     # Successful
     200: "OK",
     201: "Created",
     202: "Accepted",
-    203: "Non-Authoritative Information",
+    203: "Non-Authoritative Information",          # Not implemented (RFC-2616)
     204: "No Content",
-    205: "Reset Content",
-    206: "Partial Content",
-    207: "Multi-Status",
-    226: "IM Used",
+    205: "Reset Content",                          # Not implemented (RFC-2616)
+    206: "Partial Content",                        # Not implemented (RFC-2616)
+    207: "Multi-Status",                           # Not implemented (RFC-4918)
+    208: "Already Reported",                       # Not implemented (RFC-5842)
+    226: "IM Used",                                # Not implemented (RFC-3229)
     # Redirection
     300: "Multiple Choices",
     301: "Moved Permanently",
-    302: "Found",
+    302: "Found",                                  # Not implemented (RFC-2616)
     303: "See Other",
     304: "Not Modified",
-    305: "Use Proxy",
-    306: "Switch Proxy",
+    305: "Use Proxy",                              # Not implemented (RFC-2616)
+    306: "Unused",                  # [Switch Proxy] Not implemented (RFC-2616)
     307: "Temporary Redirect",
     # Client Error
     400: "Bad Request",
     401: "Unauthorized",
-    402: "Payment Required",
+    402: "Payment Required",                       # Not implemented (RFC-2616)
     403: "Forbidden",
     404: "Not Found",
     405: "Method Not Allowed",
     406: "Not Acceptable",
-    407: "Proxy Authentication Required",
-    408: "Request Time-out",
+    407: "Proxy Authentication Required",          # Not implemented (RFC-2616)
+    408: "Request Timeout",                        # Not implemented (RFC-2616)
     409: "Conflict",
     410: "Gone",
-    411: "Length Required",
+    411: "Length Required",                        # Not implemented (RFC-2616)
     412: "Precondition Failed",
     413: "Request Entity Too Large",
     414: "Request-URI Too Large",
     415: "Unsupported Media Type",
-    416: "Requested range not satisfiable",
-    417: "Expectation Failed",
-    418: "Resume Incomplete",
-    419: "Insufficient Space On Resource",
-    420: "Method Failure",
-    421: "Bad Mapping",
-    422: "Unprocessable Entity",
-    423: "Locked",
-    424: "Failed Dependency",
-    425: "No Code",
-    426: "Upgrade Required",
+    416: "Requested range not satisfiable",        # Not implemented (RFC-2616)
+    417: "Expectation Failed",                     # Not implemented (RFC-2616)
+    418: "Resume Incomplete", # I'm a teapot (RFC-2324) Not implemented (Internet draft)
+    419: "Insufficient Space On Resource",   # Not implemented (Internet draft)
+    420: "Policy not Fulfilled",         # Not implemented (WD-http-pep-971121)
+    421: "Bad Mapping",                  # Not implemented (WD-http-pep-971121)
+    422: "Unprocessable Entity",                   # Not implemented (RFC-4918)
+    423: "Locked",                                 # Not implemented (RFC-4918)
+    424: "Failed Dependency",     # [Method Failure] Not implemented (RFC-4918)
+    425: "No Code",                          # Not implemented (Internet draft)
+    426: "Upgrade Required",                       # Not implemented (RFC-2817)
+    428: "Precondition Required",                  # Not implemented (RFC-6585)
+    429: "Too Many Requests",                      # Not implemented (RFC-6585)
+    431: "Request Header Fields Too Large",        # Not implemented (RFC-6585)
+    451: "Unavailable For Legal Reasons",    # Not implemented (Internet draft)
     # Server Error
-    500: "Internal Server Error",
+    500: "Internal Server Error",                  # Not implemented (RFC-2616)
     501: "Not Implemented",
-    502: "Bad Gateway",
+    502: "Bad Gateway",                            # Not implemented (RFC-2616)
     503: "Service Unavailable",
-    504: "Gateway Time-out",
-    505: "HTTP Version not supported",
-    506: "Variant also negotiates",
-    507: "Insufficient Storage",
-    508: "Cross Server Binding Forbidden",
-    509: "Bandwidth Exceeded",
-    510: "Not Extended",
-    999: "Undefined (Converted to a 200 OK)",
+    504: "Gateway Timeout",                        # Not implemented (RFC-2616)
+    505: "HTTP Version not supported",             # Not implemented (RFC-2616)
+    506: "Variant also negotiates",                # Not implemented (RFC-2295)
+    507: "Insufficient Storage",                   # Not implemented (RFC-4918)
+    508: "Cross Server Binding Forbidden",         # Not implemented (RFC-5842)
+    509: "Bandwidth Exceeded",                     # Not implemented (None)
+    510: "Not Extended",                           # Not implemented (RFC 2774)
+    511: "Network Authentication Required",        # Not implemented (RFC 6585)
+    999: "Undefined",                              # Used internally only
     }
 
 def getCodeStatus(code):
@@ -444,11 +450,6 @@ class RestyCodes(RulesEngine):
          self._code = result and 300 or 200
          return result
 
-
-
-
-
-
     # [callable,
     #  True -- (callable|None),
     #  False -- (callable|None)]
@@ -469,11 +470,6 @@ class RestyCodes(RulesEngine):
                                None,
                                None]]
 
-    # Conflict
-    nodeConflict = [_conflict,
-                    None,
-                    nodeNewResourceCreated]
-
     # Post
     nodePost = [_post,
                 [_permitPostToMissingResource,
@@ -482,19 +478,6 @@ class RestyCodes(RulesEngine):
                   nodeNewResourceCreated],
                  None],
                 None]
-
-    # Put
-    nodePut = [_put,
-               [_applyToDifferentURI,
-                None,
-                nodeConflict],
-               [_resourcePreviouslyExisted,
-                [_resourceMovedPermanently,
-                 None,
-                 [_resourceMovedTemporarily,
-                  None,
-                  nodePost]],
-                nodePost]]
 
     # Delete
     nodeDelete =  [_delete,
@@ -553,7 +536,19 @@ class RestyCodes(RulesEngine):
                            nodeIfUnmodifiedSinceExists],
                           [_ifMatchAnyExists,
                            None,
-                           nodePut]]
+                           [_put,
+                            [_applyToDifferentURI,
+                             None,
+                             [_conflict,
+                              None,
+                              nodeNewResourceCreated]],
+                            [_resourcePreviouslyExisted,
+                             [_resourceMovedPermanently,
+                              None,
+                              [_resourceMovedTemporarily,
+                               None,
+                               nodePost]],
+                             nodePost]]]]
 
     # Accept Encoding
     nodeAcceptEncoding = [_acceptEncodingExists,
@@ -575,6 +570,7 @@ class RestyCodes(RulesEngine):
                            nodeAcceptCharacterSet,
                            None],
                           nodeAcceptCharacterSet]
+
     # Main Tree
     nodeTree = [_serviceAvailable,
                 [_requestUrlTooLong,
