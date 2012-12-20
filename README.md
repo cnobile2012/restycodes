@@ -60,7 +60,7 @@ Codes itself.
 > binary tree. It can be used completely independently of Resty Codes. The 
 > RulesEngine class can either be inherited or a composite in your class.
 
-> RulesEngine has four exposed methods:
+> RulesEngine class has four exposed methods:
 
 > > RulesEngine.load(seq) -- Loads the sequence (seq) into Node objects, later 
 > > used when dump is called. The root Node of the binary tree is returned.
@@ -92,7 +92,7 @@ Codes itself.
 > > getCodeStatus(code) -- A module function that creates a tuple of the code 
 > > and status text.
 
-> RestyCodes has two exposed methods:
+> RestyCodes class has two exposed methods:
 
 > > RestyCodes.getStatus(**kwargs) -- Returns a tuple containing the status code
 > > and the status description. eg. (200, "OK")
