@@ -15,7 +15,7 @@ Deviations In My Diagram
 There are two basic area in Alen Dean's diagram which I believe there are
 errors.
 
-1) After reading everything I could get my hands on I have never found an
+1. After reading everything I could get my hands on I have never found an
    reference to why a 202 Accepted could not be in a response to a GET, HEAD,
    POST, or PUT though Alen seems to only allow this in the case of a DELETE.
    In the RFC-2616 10.2.2 (201 Created) it says that "If the action cannot be 
@@ -26,23 +26,23 @@ errors.
    situation where the origin server is not able to fulfill a GET or HEAD 
    request immediately.
 
-2) Another possible issue with Alen Dean's diagram is that updates are routed
+2. Another possible issue with Alen Dean's diagram is that updates are routed
    through P11 (New resource) condition. An update by definition would never
    create a new resource, so why does it go through this condition? My diagram
    does not take this route at all. The create and update conditions are
    completely separate and, I feel, making the diagram simpler.
 
-3) The decision "New resource" was renamed to "New resource created". Though
+3. The decision "New resource" was renamed to "New resource created". Though
    not an error I believe this name change makes the purpose of the decision
    clearer.
 
 Diagram Notes
 -------------
 
-1) The major decision point in the diagram is at G7 (Resource exists?). Here
+1. The major decision point in the diagram is at G7 (Resource exists?). Here
    is where an updated or a created resource is determined.
 
-2) A point of confusion is what does B32 actually do? This is a decision
+2. A point of confusion is what does B32 actually do? This is a decision
    that would be made by the origin server as to weather or not a resource
    existed on a URI at a time in the past or not. The response may be a 301,
    307, 410, or a new resource created on a missing resource by the POST
@@ -54,7 +54,7 @@ The Python Code
 There are actually two apps in one in Resty Codes. The Rules Engine and Resty
 Codes itself.
 
-1) Rules Engine
+1. Rules Engine
 
 The decision making process is the Rules Engine which is written around a 
 binary tree. It can be used completely independently of Resty Codes. The 
@@ -75,7 +75,7 @@ the kwargs passed to the dump methods. Used mostly for debugging.
 RulesEngine.getCallSequence() -- Returns a list of the methods that were 
 executes in the order of execution. Used mostly for debugging.
 
-2) Resty Codes
+2. Resty Codes
 
 STATUS_CODE_MAP -- A module dictionary object that holds all the response codes.
 
