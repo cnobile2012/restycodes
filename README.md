@@ -82,12 +82,14 @@ their default Boolean value.
 getCodeStatus(code) -- A module function that creates a tuple of the code and 
 status text.
 
-RestyCodes.getStatus(**kwargs) -- 
+RestyCodes.getStatus(**kwargs) -- Returns a tuple cantaining the status code and
+the status description. eg. (200, "OK")
 
+RestyCodes.setConditions(**kwargs) -- A convience method that sets the argument 
+kwargs in a copy of RESTYARGS. The returned kwargs are sutable for passing 
+into RestyCodes.getStatus(**kwargs).
 
-RestyCodes.setConditions(**kwargs) -- 
-
-
+--------------------------------------------------------------------------------
 
 Comments and discussion on this topic are welcome. Please contact me at:
 
