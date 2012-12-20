@@ -60,38 +60,46 @@ Codes itself.
 > binary tree. It can be used completely independently of Resty Codes. The 
 > RulesEngine class can either be inherited or a composite in your class.
 
-> There are four exposed methods:
+> RulesEngine has four exposed methods:
 
-> RulesEngine.load(seq) -- Loads the sequence (seq) into Node objects, later 
-> used when dump is called. The root Node of the binary tree is returned.
+> > RulesEngine.load(seq) -- Loads the sequence (seq) into Node objects, later 
+> > used when dump is called. The root Node of the binary tree is returned.
 
-> RulesEngine.dump(**kwargs) -- Executes the binary tree applying the keyword 
-> arguments to the methods in the Nodes. The return value is the Boolean of the 
-> first object executed. This is somewhat useless, but could come in handy.
+> > RulesEngine.dump(**kwargs) -- Executes the binary tree applying the keyword 
+> > arguments to the methods in the Nodes. The return value is the Boolean of 
+> > the first object executed. This is somewhat useless, but could come in 
+> > handy.
 
-> RulesEngine.getIterationCount() -- Returns the actual decision tree count for 
-> the kwargs passed to the dump methods. Used mostly for debugging.
+> > RulesEngine.getIterationCount() -- Returns the actual decision tree count 
+> > for the kwargs passed to the dump methods. Used mostly for debugging.
 
-> RulesEngine.getCallSequence() -- Returns a list of the methods that were 
-> executes in the order of execution. Used mostly for debugging.
+> > RulesEngine.getCallSequence() -- Returns a list of the methods that were 
+> > executes in the order of execution. Used mostly for debugging.
 
 ### Resty Codes
 
-> STATUS_CODE_MAP -- A module dictionary object that holds all the response 
-> codes.
+> There are at this time 49 conditions in version 1.0 of my diagram. This
+> translates to 49 keyword arguments that can be set to True or False.
 
-> RESTYARGS -- A module dictionary object that defines the 49 keyword objects 
-> and their default Boolean value.
+> The module has two exposed dictionaries and one function:
 
-> getCodeStatus(code) -- A module function that creates a tuple of the code and 
-> status text.
+> > STATUS_CODE_MAP -- A module dictionary object that holds all the response 
+> > codes.
 
-> RestyCodes.getStatus(**kwargs) -- Returns a tuple containing the status code
-> and the status description. eg. (200, "OK")
+> > RESTYARGS -- A module dictionary object that defines the 49 keyword objects 
+> > and their default Boolean value.
 
-> RestyCodes.setConditions(**kwargs) -- A convenience method that sets the 
-> argument kwargs in a copy of RESTYARGS. The returned kwargs are suitable for 
-> passing into RestyCodes.getStatus(**kwargs).
+> > getCodeStatus(code) -- A module function that creates a tuple of the code 
+> > and status text.
+
+> RestyCodes has two exposed methods:
+
+> > RestyCodes.getStatus(**kwargs) -- Returns a tuple containing the status code
+> > and the status description. eg. (200, "OK")
+
+> > RestyCodes.setConditions(**kwargs) -- A convenience method that sets the 
+> > argument kwargs in a copy of RESTYARGS. The returned kwargs are suitable 
+> > for passing into RestyCodes.getStatus(**kwargs).
 
 --------------------------------------------------------------------------------
 
