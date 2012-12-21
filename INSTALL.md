@@ -1,28 +1,28 @@
-Resty Codes Operation
-=====================
+Resty Codes Installation
+========================
 
 Top Level Makefile
 ------------------
 
 ### all
 
-> This target or just make without this target executes the `doc` and
+> The `all` target or just make without this target executes the `doc` and
 `tar`  targets.
 
 ### doc
 
-> The doc target generates the EpyDoc API documentation and the PDF file
+> The `doc` target generates the EpyDoc API documentation and the PDF file
 from the dia diagram.
 
 ### tar
 
-> The tar target creates a tar file of the entire project including the
+> The `tar` target creates a tar file of the entire project including the
 generated documentation, but without the git meta data outside of the
 project directory.
 
 ### tests
 
-> The tests target runs the RulesEngine and RestyCodes unit tests.
+> The `tests` target runs the RulesEngine and RestyCodes unit tests.
 
 ### egg
 
@@ -30,11 +30,11 @@ project directory.
 
 ### clean
 
-> The clean target removes all backup files and python compiled objects.
+> The `clean` target removes all backup files and python compiled objects.
 
 ### clobber
 
-> The clobber target removes eveything except the Git source files.
+> The `clobber` target removes eveything except the Git source files.
 
 
 Document Makefile
@@ -42,26 +42,26 @@ Document Makefile
 
 ### all
 
-> Runs the api-docs and pdf targets.
+> The `all` target runs the api-docs and pdf targets.
 
 ### api-docs
 
-> The api-docs target is usually run from the top level Makefile. It
+> The `api-docs` target is usually run from the top level Makefile. It
 generates the EpyDoc API documentation.
 
 ### pdf
 
-> The pdf target generates a PDF file from the dia diagram.
+> The `pdf` target generates a PDF file from the dia diagram.
 
 ### tar
 
-> The tar target creates a tar file of the EpyDoc API documentation.
+> The `tar` target creates a tar file of the EpyDoc API documentation.
 
 ### clean
 
-> The clean target removes backup files from the dirs directory.
+> The `clean` target removes backup files from the dirs directory.
 
 ### clobber
 
-> The clobber target runs clean then removes the tar file created by
-the tar target.
+> The `clobber` target runs clean then removes the tar file created by
+the `tar` target.
