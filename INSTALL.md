@@ -42,7 +42,7 @@ Document Makefile
 
 ### all
 
-> The `all` target runs the api-docs and pdf targets.
+> The `all` target runs the `api-docs` and `pdf` targets.
 
 ### api-docs
 
@@ -63,5 +63,5 @@ generates the EpyDoc API documentation.
 
 ### clobber
 
-> The `clobber` target runs clean then removes the tar file created by
-the `tar` target.
+> The `clobber` target runs `clean` target then removes the tar file created 
+by the `tar` target.
