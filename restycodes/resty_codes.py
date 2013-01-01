@@ -4,8 +4,10 @@
 """
 Resty Codes
   Returns a (code, 'Description') tuple derived from data that was supplied
-  from an application. This code implements the diagram by Alan Dean at:
+  from an application. This code is based on the diagram by Alan Dean at:
   http://code.google.com/p/http-headers-status/.
+
+  I have drawn a new diagram which comes with this package.
 
 by: Carl J. Nobile
 
@@ -168,9 +170,6 @@ class RestyCodes(RulesEngine):
     All internal method calls shall return a Boolean.
     """
     DEFAULT_CODE = 999
-    COMMON_METHODS = ('DELETE', 'GET', 'HEAD', 'PUT', 'POST',)
-    KNOWN_METHODS = ('TRACE', 'CONNECT', 'MOVE', 'PROPPATCH', 'MKCOL',
-                     'COPY', 'UNLOCK',)
 
     def __init__(self, storeSeq=False):
         """
@@ -599,3 +598,33 @@ class RestyCodes(RulesEngine):
                          [_knownMethod, None, None]]]]]]],
                    None]]],
                 None]
+
+
+class ConditionHandler(RestyCodes):
+    """
+    Defines some basic methods that can generate results that will satisfy the
+    conditions in the RestyCodes class.
+    """
+    COMMON_METHODS = ('DELETE', 'GET', 'HEAD', 'PUT', 'POST',)
+    KNOWN_METHODS = ('TRACE', 'CONNECT', 'MOVE', 'PROPPATCH', 'MKCOL',
+                     'COPY', 'UNLOCK',)
+
+    def __init__(self, storeSeq=False):
+        super(ConditionHandler, self).__init__(storeSeq=storeSeq)
+        self._kwargs = {}
+
+    def getStatus(self):
+        kwargs = self.setConditions(**self._kwargs)
+        return super(ConditionHandler, self).getStatus(**kwargs)
+
+    def requestUrlTooLong(self, url, size):
+        self._kwargs['requestUrlTooLong'] = len(url) > size
+
+    def requestEntityTooLarge(self, entity, size):
+        self._kwargs['requestEntityTooLarge'] = len(entity) > size
+
+    def commonMethod(self, method):
+        self._kwargs['commonMethod'] = method in self.COMMON_METHODS
+
+    def notImplemented(self, method):
+        self._kwargs['notImplemented'] = method in self.KNOWN_METHODS

@@ -15,14 +15,16 @@ __docformat__ = "restructuredtext en"
 
 import unittest
 from unittest import skip
+from cStringIO import StringIO
 
 from rulesengine import InvalidNodeSizeException
-from restycodes import RESTYARGS, RestyCodes, InvalidConditionNameException
+from restycodes import (RESTYARGS, RestyCodes, ConditionHandler,
+                        InvalidConditionNameException, getCodeStatus,)
 
 
 class TestRestyCodes(unittest.TestCase):
     """
-    Tests for the rules engine.
+    Tests for the RestyCodes class.
     """
     SKIP_MESSAGE = "This test will fail until all conditions are implemented."
 
@@ -361,13 +363,6 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(26, 300, {'resourceExists': True,
                                  'multipleRepresentation': True})#, calls=True)
 
-
-
-
-
-
-
-
     def __runTest(self, expect, code, condition, calls=False):
         kwargs = self._rc.setConditions(**condition)
         result = self._rc.getStatus(**kwargs)
@@ -389,6 +384,56 @@ class TestRestyCodes(unittest.TestCase):
                 print call.__name__
 
             print "Total Count: {0}".format(len(seq))
+
+
+class TestConditionHandler(unittest.TestCase):
+    """
+    Tests for the ConditionHandler class.
+    """
+    def __init__(self, name):
+        """
+        :Parameters:
+          name : str
+            Unit test name.
+        """
+        super(TestConditionHandler, self).__init__(name)
+
+    def setUp(self):
+        """
+        Create the RestyCodes instance.
+        """
+        self._mch = ConditionHandler()
+
+    def tearDown(self):
+        pass
+
+    def test_requestUrlTooLong(self):
+        msg = "Invalid status: found {0}, should be {1}"
+
+        for size, code in ((20, 200), (19, 200), (18, 414)):
+            self._mch.requestUrlTooLong("someverylongurl.com", size)
+            found = self._mch.getStatus()
+            status = getCodeStatus(code)
+            self.assertTrue(found == status, msg.format(found, status))
+
+    def test_requestEntityTooLarge(self):
+        msg = "Invalid status: found {0}, should be {1}"
+        entity = StringIO()
+        entity.write("GET / http/1.1\r\n")
+        entity.write("Host: example.org\r\n")
+        entity.write("\r\n")
+        entity.write("Some entity body text.\r\n")
+        result = entity.getvalue()
+        entity.close()
+
+        for size, code in ((62, 200), (61, 200), (60, 413)):
+            self._mch.requestEntityTooLarge(result, size)
+            found = self._mch.getStatus()
+            status = getCodeStatus(code)
+            self.assertTrue(found == status, msg.format(found, status))
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
