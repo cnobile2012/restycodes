@@ -402,7 +402,7 @@ class TestConditionHandler(unittest.TestCase):
         """
         Create the RestyCodes instance.
         """
-        self._mch = ConditionHandler()
+        self._ch = ConditionHandler()
 
     def tearDown(self):
         pass
@@ -411,28 +411,47 @@ class TestConditionHandler(unittest.TestCase):
         msg = "Invalid status: found {0}, should be {1}"
 
         for size, code in ((20, 200), (19, 200), (18, 414)):
-            self._mch.requestUrlTooLong("someverylongurl.com", size)
-            found = self._mch.getStatus()
-            status = getCodeStatus(code)
-            self.assertTrue(found == status, msg.format(found, status))
+            self._ch.requestUrlTooLong("someverylongurl.com", size)
+            self.__runTest(code)
 
     def test_requestEntityTooLarge(self):
-        msg = "Invalid status: found {0}, should be {1}"
-        entity = StringIO()
-        entity.write("GET / http/1.1\r\n")
-        entity.write("Host: example.org\r\n")
-        entity.write("\r\n")
-        entity.write("Some entity body text.\r\n")
-        result = entity.getvalue()
-        entity.close()
+        rawEntity = StringIO()
+        rawEntity.write("GET / http/1.1\r\n")
+        rawEntity.write("Host: example.org\r\n")
+        rawEntity.write("\r\n")
+        rawEntity.write("Some entity body text.\r\n")
+        result = rawEntity.getvalue()
+        rawEntity.close()
 
         for size, code in ((62, 200), (61, 200), (60, 413)):
-            self._mch.requestEntityTooLarge(result, size)
-            found = self._mch.getStatus()
-            status = getCodeStatus(code)
-            self.assertTrue(found == status, msg.format(found, status))
+            self._ch.requestEntityTooLarge(result, size)
+            self.__runTest(code)
+
+    def test_commonMethod(self):
+        for method, code in (('DELETE', 200), ('GET', 200), ('HEAD', 200),
+                             ('PUT', 200), ('POST', 200), ('TRACE', 405)):
+            self._ch.commonMethod(method)
+            self.__runTest(code)
+
+    def test_notImplemented(self):
+        for method, code in (('TRACE', 501), ('CONNECT', 501), ('MOVE', 501),
+                             ('PROPPATCH', 501), ('MKCOL', 501), ('COPY', 501),
+                             ('UNLOCK', 501), ('UNKNOWN', 405)):
+            self._ch.commonMethod(method)
+            self._ch.notImplemented(method)
+            self.__runTest(code)
 
 
+
+
+
+
+
+    def __runTest(self, code):
+        msg = "Invalid status: found {0}, should be {1}"
+        found = self._ch.getStatus()
+        status = getCodeStatus(code)
+        self.assertTrue(found == status, msg.format(found, status))
 
 
 if __name__ == '__main__':
