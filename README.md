@@ -12,32 +12,34 @@ http://code.google.com/p/http-headers-status/
 Deviations In My Diagram
 ------------------------
 
-There are two basic area in Alen Dean's diagram which I believe there are
+There are two basic areas in Alen Dean's diagram in which I believe there are
 errors.
 
-1. After reading everything I could get my hands on I have never found an
-   reference to why a 202 Accepted could not be in a response to a GET, HEAD,
-   POST, or PUT though Alen seems to only allow this in the case of a DELETE.
-   In the RFC-2616 10.2.2 (201 Created) it says that "If the action cannot be 
-   carried out immediately, the server SHOULD respond with 202 (Accepted) 
-   response". Therefore both a PUT and POST can cause a 202 in the response. 
-   There is no mention in the RFC about a GET or HEAD method with regards to 
-   a 202, but I see no reason why a 202 should not be possible. Consider a 
-   situation where the origin server is not able to fulfill a GET or HEAD 
-   request immediately.
+1. After reading everything I could get my hands on I have never found a
+   reference to why a 202 Accepted could not be in a response of a GET, HEAD,
+   POST, or PUT although Alen seems to only allow this in the case of a
+   DELETE. In the RFC-2616 10.2.2 (201 Created) it says "If the action cannot 
+   be carried out immediately, the server SHOULD respond with 202 (Accepted) 
+   response instead". It does not indicate that the action should only be a 
+   DELETE, so I have included all actions (methods). Both a PUT and POST can 
+   cause a 202 in the response though there is no mention in the RFC about 
+   a GET or HEAD method with regards to a 202, but I see no reason why a 202 
+   should not be possible. Consider a situation where the origin server is not 
+   able to fulfill a GET or HEAD request immediately, but needs to delay it 
+   for some future time.
 
 2. Another possible issue with Alen Dean's diagram is that updates are routed
    through P11 (New resource) condition. An update by definition would never
    create a new resource, so why does it go through this condition? My diagram
    does not take this route at all. The create and update conditions are
-   completely separate and, I feel, making the diagram simpler.
+   completely separate and, I feel, making my diagram simpler.
 
 3. The decision "New resource" was renamed to "New resource created". Though
    not an error I believe this name change makes the purpose of the decision
    clearer.
 
-Diagram Notes
--------------
+New Diagram Notes
+-----------------
 
 1. The major decision point in the diagram is at G7 (Resource exists?). Here
    is where an updated or a created resource is determined.
@@ -58,7 +60,8 @@ Codes itself.
 
 > The decision making process is the Rules Engine which is written around a 
 > binary tree. It can be used completely independently of Resty Codes. The 
-> RulesEngine class can either be inherited or a composite in your class.
+> RulesEngine class can either be inherited or a composite in your class. See
+> the unittests for an example of usage.
 
 > RulesEngine class has four exposed methods:
 
@@ -67,8 +70,8 @@ Codes itself.
 
 > > RulesEngine.dump(**kwargs) -- Executes the binary tree applying the keyword 
 > > arguments to the methods in the Nodes. The return value is the Boolean of 
-> > the first object executed. This is somewhat useless, but could come in 
-> > handy.
+> > the first object executed. Having a return value here is somewhat useless,
+> > but could come in handy.
 
 > > RulesEngine.getIterationCount() -- Returns the actual decision tree count 
 > > for the kwargs passed to the dump methods. Used mostly for debugging.
@@ -79,7 +82,8 @@ Codes itself.
 ### Resty Codes
 
 > There are at this time 49 conditions in version 1.0 of my diagram. This
-> translates to 49 keyword arguments that can be set to True or False.
+> translates to 49 keyword arguments that can be set to True or False. See
+> the unittests for an example of usage.
 
 > The module has two exposed dictionaries and one function:
 
