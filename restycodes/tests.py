@@ -408,8 +408,6 @@ class TestConditionHandler(unittest.TestCase):
         pass
 
     def test_requestUrlTooLong(self):
-        msg = "Invalid status: found {0}, should be {1}"
-
         for size, code in ((20, 200), (19, 200), (18, 414)):
             self._ch.requestUrlTooLong("someverylongurl.com", size)
             self.__runTest(code)
@@ -427,18 +425,13 @@ class TestConditionHandler(unittest.TestCase):
             self._ch.requestEntityTooLarge(result, size)
             self.__runTest(code)
 
-    def test_commonMethod(self):
+    def test_setMethod(self):
         for method, code in (('DELETE', 200), ('GET', 200), ('HEAD', 200),
-                             ('PUT', 200), ('POST', 200), ('TRACE', 405)):
-            self._ch.commonMethod(method)
-            self.__runTest(code)
-
-    def test_notImplemented(self):
-        for method, code in (('TRACE', 501), ('CONNECT', 501), ('MOVE', 501),
-                             ('PROPPATCH', 501), ('MKCOL', 501), ('COPY', 501),
-                             ('UNLOCK', 501), ('UNKNOWN', 405)):
-            self._ch.commonMethod(method)
-            self._ch.notImplemented(method)
+                             ('PUT', 200), ('POST', 200), ('OPTIONS', 200),
+                             ('TRACE', 405), ('CONNECT', 405), ('MOVE', 405),
+                             ('PROPPATCH', 405), ('MKCOL', 405), ('COPY', 405),
+                             ('UNLOCK', 405), ('UNKNOWN', 501)):
+            self._ch.method(method)
             self.__runTest(code)
 
 

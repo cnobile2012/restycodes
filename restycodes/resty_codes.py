@@ -602,8 +602,8 @@ class RestyCodes(RulesEngine):
 
 class ConditionHandler(RestyCodes):
     """
-    Defines some basic methods that can generate results that will satisfy the
-    conditions in the RestyCodes class.
+    Defines some basic methods that generate results satisfying the
+    requirements of the conditions in the RestyCodes class.
     """
     COMMON_METHODS = ('DELETE', 'GET', 'HEAD', 'PUT', 'POST',)
     KNOWN_METHODS = ('TRACE', 'CONNECT', 'MOVE', 'PROPPATCH', 'MKCOL',
@@ -623,8 +623,7 @@ class ConditionHandler(RestyCodes):
     def requestEntityTooLarge(self, entity, size):
         self._kwargs['requestEntityTooLarge'] = len(entity) > size
 
-    def commonMethod(self, method):
-        self._kwargs['commonMethod'] = method in self.COMMON_METHODS
-
-    def notImplemented(self, method):
-        self._kwargs['notImplemented'] = method in self.KNOWN_METHODS
+    def method(self, method):
+        self._kwargs['options'] = method.upper() == 'OPTIONS'
+        self._kwargs['commonMethod'] = method.upper() in self.COMMON_METHODS
+        self._kwargs['knownMethod'] = method.upper() in self.KNOWN_METHODS
