@@ -410,7 +410,7 @@ class TestConditionHandler(unittest.TestCase):
     def test_requestUrlTooLong(self):
         for size, code in ((20, 200), (19, 200), (18, 414)):
             self._ch.requestUrlTooLong("someverylongurl.com", size)
-            self.__runTest(code)
+            self.__runTest(code, "with size: {0}".format(size))
 
     def test_requestEntityTooLarge(self):
         rawEntity = StringIO()
@@ -423,7 +423,7 @@ class TestConditionHandler(unittest.TestCase):
 
         for size, code in ((62, 200), (61, 200), (60, 413)):
             self._ch.requestEntityTooLarge(result, size)
-            self.__runTest(code)
+            self.__runTest(code, "with size: {0}".format(size))
 
     def test_setMethod(self):
         for method, code in (('DELETE', 200), ('GET', 200), ('HEAD', 200),
@@ -432,7 +432,7 @@ class TestConditionHandler(unittest.TestCase):
                              ('PROPPATCH', 405), ('MKCOL', 405), ('COPY', 405),
                              ('UNLOCK', 405), ('UNKNOWN', 501)):
             self._ch.method(method)
-            self.__runTest(code)
+            self.__runTest(code, "with method: {0}".format(method))
 
 
 
@@ -440,10 +440,11 @@ class TestConditionHandler(unittest.TestCase):
 
 
 
-    def __runTest(self, code):
+    def __runTest(self, code, message=""):
         msg = "Invalid status: found {0}, should be {1}"
         found = self._ch.getStatus()
         status = getCodeStatus(code)
+        msg += ", " + message
         self.assertTrue(found == status, msg.format(found, status))
 
 
