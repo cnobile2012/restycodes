@@ -23,6 +23,12 @@ tar	: clean
 	@(cd ..; tar -czvf ${PACKAGE_DIR}-${VERSION}.tar.gz --exclude=".git" \
           ${PACKAGE_DIR})
 #----------------------------------------------------------------------
+python-api:
+	@python setup.py build
+#----------------------------------------------------------------------
+egg	: python-api
+	@python setup.py bdist_egg
+#----------------------------------------------------------------------
 tests	:
 	@echo "Testing the ${RULES_ENGINE}..."
 	@(. ${PREFIX}/setup_settings; python ${PREFIX}/${RULES_ENGINE}/tests.py)
@@ -37,3 +43,4 @@ clean	:
 
 clobber	: clean
 	@(cd $(DOCS_DIR); make clobber)
+	@rm -rf build dist RestyCodes.egg-info

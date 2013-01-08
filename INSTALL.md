@@ -24,9 +24,13 @@ project directory.
 
 > The `tests` target runs the RulesEngine and RestyCodes unit tests.
 
+### python-api
+
+> Creates the python package.
+
 ### egg
 
-> TODO -- Will create an egg file for installing the RestyCodes package.
+> Creates the egg file.
 
 ### clean
 
