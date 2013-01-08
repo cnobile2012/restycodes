@@ -450,8 +450,9 @@ class RestyCodes(RulesEngine):
          return result
 
     # [callable,
-    #  True -- (callable|None),
-    #  False -- (callable|None)]
+    #  [callable, ..., ...] or None, (True branch)
+    #  [callable, ..., ...] or None  (False branch)
+    # ]
 
     # Method Enacted
     nodeMethodEnacted = [_methodEnacted,

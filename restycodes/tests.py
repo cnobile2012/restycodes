@@ -425,7 +425,7 @@ class TestConditionHandler(unittest.TestCase):
             self._ch.requestEntityTooLarge(result, size)
             self.__runTest(code, "with size: {0}".format(size))
 
-    def test_setMethod(self):
+    def test_method(self):
         for method, code in (('DELETE', 200), ('GET', 200), ('HEAD', 200),
                              ('PUT', 200), ('POST', 200), ('OPTIONS', 200),
                              ('TRACE', 405), ('CONNECT', 405), ('MOVE', 405),
