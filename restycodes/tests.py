@@ -15,7 +15,8 @@ __docformat__ = "restructuredtext en"
 
 import unittest
 from unittest import skip
-from cStringIO import StringIO
+from io import StringIO
+
 
 from rulesengine import InvalidNodeSizeException
 from restycodes import (RESTYARGS, RestyCodes, ConditionHandler,
@@ -414,10 +415,10 @@ class TestConditionHandler(unittest.TestCase):
 
     def test_requestEntityTooLarge(self):
         rawEntity = StringIO()
-        rawEntity.write("GET / http/1.1\r\n")
-        rawEntity.write("Host: example.org\r\n")
-        rawEntity.write("\r\n")
-        rawEntity.write("Some entity body text.\r\n")
+        rawEntity.write(u"GET / http/1.1\r\n")
+        rawEntity.write(u"Host: example.org\r\n")
+        rawEntity.write(u"\r\n")
+        rawEntity.write(u"Some entity body text.\r\n")
         result = rawEntity.getvalue()
         rawEntity.close()
 
