@@ -17,8 +17,8 @@ from the dia diagram.
 ### tar
 
 > The `tar` target creates a tar file of the entire project including the
-generated documentation, but without the git meta data outside of the
-project directory.
+generated documentation outside of the project directory. The git meta data
+is not included in the tarball.
 
 ### tests
 
@@ -30,7 +30,7 @@ project directory.
 
 ### egg
 
-> Creates the egg file.
+> Creates the egg file after running the `python-api` target.
 
 ### clean
 
@@ -46,12 +46,12 @@ Document Makefile
 
 ### all
 
-> The `all` target runs the `api-docs` and `pdf` targets.
+> The `all` target runs the `api-docs` and `pdf` targets. This target is 
+usually run from the top level Makefile.
 
 ### api-docs
 
-> The `api-docs` target is usually run from the top level Makefile. It
-generates the EpyDoc API documentation.
+> The `api-docs` target generates the EpyDoc API documentation.
 
 ### pdf
 
@@ -69,3 +69,11 @@ generates the EpyDoc API documentation.
 
 > The `clobber` target runs `clean` target then removes the tar file created 
 by the `tar` target.
+
+
+Installing on the system
+------------------------
+
+The installation of the egg file is not included in the Makefile, but can
+easily be done with either `easy_install` or `pip`. If you want to install
+the code directly running `python setup.py install` will also work.
