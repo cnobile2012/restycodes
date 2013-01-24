@@ -106,7 +106,7 @@ class RulesEngine(object):
                   "got: {0}, on: {1}".format(size, blist)
             raise InvalidNodeSizeException(msg)
 
-        for i in xrange(size):
+        for i in range(size):
             item = blist[i]
             if 0 == i: node.method = item
 
