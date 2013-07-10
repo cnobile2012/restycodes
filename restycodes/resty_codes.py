@@ -91,7 +91,7 @@ STATUS_CODE_MAP = {
     509: "Bandwidth Exceeded",                     # Not implemented (None)
     510: "Not Extended",                           # Not implemented (RFC 2774)
     511: "Network Authentication Required",        # Not implemented (RFC 6585)
-    999: "Undefined",                              # Used internally only
+    999: "Undefined",                              # RestyCodes internal only
     }
 
 
