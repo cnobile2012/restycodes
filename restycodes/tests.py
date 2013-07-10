@@ -93,14 +93,14 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(11, 405, {'methodAllowedOnResource': False})
 
     def test_acceptExists(self):
-        self.__runTest(27, 200, {'acceptExists': True})#, calls=True)
+        self.__runTest(27, 200, {'acceptExists': True})  #, calls=True)
 
     def test_acceptMediaTypeAvaliable(self):
         self.__runTest(13, 406, {'acceptExists': True,
                                  'acceptMediaTypeAvaliable': False})
 
     def test_acceptLanguageExists(self):
-        self.__runTest(27, 200, {'acceptLanguageExists': True})#, calls=True)
+        self.__runTest(27, 200, {'acceptLanguageExists': True})  #, calls=True)
 
     def test_acceptLanguageAvaliable(self):
         self.__runTest(14, 406, {'acceptLanguageExists': True,
@@ -128,7 +128,7 @@ class TestRestyCodes(unittest.TestCase):
     #@skip(SKIP_MESSAGE)
     def test_ifMatchExists(self):
         self.__runTest(28, 200, {'resourceExists': True,
-                                'ifMatchExists': True}, calls=False)
+                                 'ifMatchExists': True}, calls=False)
 
     #@skip(SKIP_MESSAGE)
     def test_ifMatchAnyExists(self):
@@ -136,8 +136,8 @@ class TestRestyCodes(unittest.TestCase):
                                  'ifMatchExists': True,
                                  'ifMatchAnyExists': True}, calls=False)
         self.__runTest(28, 200, {'resourceExists': True,
-                                'ifMatchExists': True,
-                                'ifMatchAnyExists': False}, calls=False)
+                                 'ifMatchExists': True,
+                                 'ifMatchAnyExists': False}, calls=False)
         self.__runTest(17, 412, {'resourceExists': False,
                                  'ifMatchAnyExists': True}, calls=False)
 
@@ -159,8 +159,8 @@ class TestRestyCodes(unittest.TestCase):
     #@skip(SKIP_MESSAGE)
     def test_ifUnmodifiedSinceIsValidDate(self):
         self.__runTest(28, 200, {'resourceExists': True,
-                                'ifUnmodifiedSinceExists': True,
-                                'ifUnmodifiedSinceIsValidDate': True},
+                                 'ifUnmodifiedSinceExists': True,
+                                 'ifUnmodifiedSinceIsValidDate': True},
                        calls=False)
 
     def test_lastModifiedGtIfUnmodifiedSince(self):
@@ -190,15 +190,15 @@ class TestRestyCodes(unittest.TestCase):
                                  'conflict': True})
         self.__runTest(20, 409, {'resourceExists': False,
                                  'put': True,
-                                 'conflict': True})#, calls=True)
+                                 'conflict': True})  #, calls=True)
 
     def test_newResourceCreated(self):
         self.__runTest(22, 202, {'resourceExists': False,
                                  'put': True,
-                                 'newResourceCreated': False})#, calls=True)
+                                 'newResourceCreated': False})  #, calls=True)
         self.__runTest(24, 202, {'resourceExists': False,
                                  'post': True,
-                                 'newResourceCreated': False})#, calls=True)
+                                 'newResourceCreated': False})  #, calls=True)
 
     def test_resourcePreviouslyExisted(self):
         self.__runTest(22, 410, {'resourceExists': False,
@@ -220,7 +220,7 @@ class TestRestyCodes(unittest.TestCase):
                                  'post': True})
         self.__runTest(25, 201, {'resourceExists': False,
                                  'resourcePreviouslyExisted': True,
-                                 'post': True})#, calls=True)
+                                 'post': True})  #, calls=True)
 
     def test_permitPostToMissingResource(self):
         self.__runTest(21, 404, {'resourceExists': False,
@@ -264,11 +264,11 @@ class TestRestyCodes(unittest.TestCase):
     #@skip(SKIP_MESSAGE)
     def test_eTagInIfNoneMatch(self):
         self.__runTest(22, 304, {'resourceExists': True,
-                                'ifNoneMatchExists': True,
-                                'eTagInIfNoneMatch': True}, calls=False)
+                                 'ifNoneMatchExists': True,
+                                 'eTagInIfNoneMatch': True}, calls=False)
         self.__runTest(28, 200, {'resourceExists': True,
-                                'ifNoneMatchExists': True,
-                                'eTagInIfNoneMatch': False}, calls=False)
+                                 'ifNoneMatchExists': True,
+                                 'eTagInIfNoneMatch': False}, calls=False)
 
     def test_getOrHead(self):
         self.__runTest(21, 304, {'resourceExists': True,
@@ -332,7 +332,7 @@ class TestRestyCodes(unittest.TestCase):
         self.__runTest(24, 200, {'resourceExists': True,
                                  'delete': True}, calls=False)
         self.__runTest(26, 200, {'resourceExists': True,
-                                'delete': False}, calls=False)
+                                 'delete': False}, calls=False)
 
     def test_methodEnacted(self):
         self.__runTest(22, 202, {'resourceExists': True,
@@ -433,12 +433,6 @@ class TestConditionHandler(unittest.TestCase):
                              ('UNLOCK', 405), ('UNKNOWN', 501)):
             self._ch.method(method)
             self.__runTest(code, "with method: {0}".format(method))
-
-
-
-
-
-
 
     def __runTest(self, code, message=""):
         msg = "Invalid status: found {0}, should be {1}"

@@ -149,10 +149,10 @@ class RulesEngine(object):
         result = node.method(self._self, **kwargs)
         self._storeSeq and self._callSequence.append(node.method)
 
-        if result: # True take the right branch
+        if result:  # True take the right branch
             if isinstance(node.left, Node):
                 result = self.__extract(node.left, **kwargs)
-        else: # False take the left branch
+        else:  # False take the left branch
             if isinstance(node.right, Node):
                 result = self.__extract(node.right, **kwargs)
 

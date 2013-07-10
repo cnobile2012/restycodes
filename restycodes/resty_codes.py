@@ -94,6 +94,7 @@ STATUS_CODE_MAP = {
     999: "Undefined",                              # Used internally only
     }
 
+
 def getCodeStatus(code):
     '''
     Get a `tuple` of the response. ex. ``(200, "OK")``.
@@ -445,9 +446,9 @@ class RestyCodes(RulesEngine):
         return result
 
     def _multipleRepresentation(self, **kwargs):
-         result = kwargs.get('multipleRepresentation', False)
-         self._code = result and 300 or 200
-         return result
+        result = kwargs.get('multipleRepresentation', False)
+        self._code = result and 300 or 200
+        return result
 
     # [callable,
     #  [callable, ..., ...] or None, (True branch)
@@ -480,17 +481,17 @@ class RestyCodes(RulesEngine):
                 None]
 
     # Delete
-    nodeDelete =  [_delete,
-                   nodeMethodEnacted,
-                   [_post,
-                    [_redirect,
+    nodeDelete = [_delete,
+                  nodeMethodEnacted,
+                  [_post,
+                   [_redirect,
+                    None,
+                    nodeMethodEnacted],
+                   [_put,
+                    [_conflict,
                      None,
                      nodeMethodEnacted],
-                    [_put,
-                     [_conflict,
-                      None,
-                      nodeMethodEnacted],
-                     nodeMethodEnacted]]]
+                    nodeMethodEnacted]]]
 
     # If Modified Since Exists
     nodeIfModifiedSinceExists = [_ifModifiedSinceExists,
