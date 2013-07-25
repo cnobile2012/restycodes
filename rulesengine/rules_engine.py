@@ -44,8 +44,8 @@ class RulesEngine(object):
     """
     An engine to execute a path of functionality. Each `Node` shall have one
     or two branches or leaves. The execution will follow all nodes where one
-    or two branches are found and shall continue when all branches are exhausted
-    and shall end when no further branches to traverse are found.
+    or two branches are found and shall continue when all branches are
+    exhausted and shall end when no further branches to traverse are found.
     """
     def __init__(self, this=None, storeSeq=False):
         """
@@ -53,9 +53,9 @@ class RulesEngine(object):
           this : ``InstanceType``
             The object that the methods are called from.
           storeSeq : `bool`
-            The default `False` will not store the call method sequence. Set to
-            `True` if you want the call sequence stored. the get it with the
-            `getCallSequence` method.
+            The default `False` will not store the call method sequence. Set
+            to `True` if you want the call sequence stored. Then get it with
+            the `getCallSequence` method.
         """
         self._self = this is None and self or this
         self._root = None
@@ -103,7 +103,7 @@ class RulesEngine(object):
 
         if size != 3:
             msg = "Invalid sequence size, expected: 3, " + \
-                  "got: {0}, on: {1}".format(size, blist)
+                  "got: {}, on: {}".format(size, blist)
             raise InvalidNodeSizeException(msg)
 
         for i in range(size):

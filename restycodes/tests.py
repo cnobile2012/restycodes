@@ -369,10 +369,10 @@ class TestRestyCodes(unittest.TestCase):
         result = self._rc.getStatus(**kwargs)
         count = self._rc.getIterationCount()
         self.__printCalls(calls=calls)
-        msg = "Iteration count should be {0}, but found {1}".format(
+        msg = "Iteration count should be {}, but found {}".format(
             expect, count)
         self.assertTrue(count == expect, msg)
-        msg = "Status code should be {0}, but found {1}".format(
+        msg = "Status code should be {}, but found {}".format(
             code, result[0])
         self.assertTrue(result[0] == code, msg)
 
@@ -384,7 +384,7 @@ class TestRestyCodes(unittest.TestCase):
             for call in seq:
                 print call.__name__
 
-            print "Total Count: {0}".format(len(seq))
+            print "Total Count: {}".format(len(seq))
 
 
 class TestConditionHandler(unittest.TestCase):
@@ -411,7 +411,7 @@ class TestConditionHandler(unittest.TestCase):
     def test_requestUrlTooLong(self):
         for size, code in ((20, 200), (19, 200), (18, 414)):
             self._ch.requestUrlTooLong("someverylongurl.com", size)
-            self.__runTest(code, "with size: {0}".format(size))
+            self.__runTest(code, "with size: {}".format(size))
 
     def test_requestEntityTooLarge(self):
         rawEntity = StringIO()
@@ -424,7 +424,7 @@ class TestConditionHandler(unittest.TestCase):
 
         for size, code in ((62, 200), (61, 200), (60, 413)):
             self._ch.requestEntityTooLarge(result, size)
-            self.__runTest(code, "with size: {0}".format(size))
+            self.__runTest(code, "with size: {}".format(size))
 
     def test_method(self):
         for method, code in (('DELETE', 200), ('GET', 200), ('HEAD', 200),
@@ -433,10 +433,10 @@ class TestConditionHandler(unittest.TestCase):
                              ('PROPPATCH', 405), ('MKCOL', 405), ('COPY', 405),
                              ('UNLOCK', 405), ('UNKNOWN', 501)):
             self._ch.method(method)
-            self.__runTest(code, "with method: {0}".format(method))
+            self.__runTest(code, "with method: {}".format(method))
 
     def __runTest(self, code, message=""):
-        msg = "Invalid status: found {0}, should be {1}"
+        msg = "Invalid status: found {}, should be {}"
         found = self._ch.getStatus()
         status = getCodeStatus(code)
         msg += ", " + message

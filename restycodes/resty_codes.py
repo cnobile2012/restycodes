@@ -212,7 +212,7 @@ class RestyCodes(RulesEngine):
 
         for key, value in list(kwargs.items()):
             if key not in RESTYARGS:
-                msg = "Provided key '{0}' is not in kwargs.".format(key)
+                msg = "Provided key '{}' is not in kwargs.".format(key)
                 raise InvalidConditionNameException(msg)
 
             restyArgs[key] = value

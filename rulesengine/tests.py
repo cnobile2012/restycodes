@@ -71,7 +71,7 @@ class TestRulesEngine(unittest.TestCase):
         self._re.dump()
         expect = 3
         count = self._re.getIterationCount()
-        msg = "Iteration count should be {0}, found {1}".format(expect, count)
+        msg = "Iteration count should be {}, found {}".format(expect, count)
         self.assertTrue(count == expect, msg)
 
     def testLogic_02(self):
@@ -84,7 +84,7 @@ class TestRulesEngine(unittest.TestCase):
         self._re.dump(**kwargs)
         expect = 3
         count = self._re.getIterationCount()
-        msg = "Iteration count should be {0}, found {1}".format(expect, count)
+        msg = "Iteration count should be {}, found {}".format(expect, count)
         self.assertTrue(count == expect, msg)
 
     def testLogic_03(self):
@@ -97,7 +97,7 @@ class TestRulesEngine(unittest.TestCase):
         self._re.dump(**kwargs)
         expect = 1
         count = self._re.getIterationCount()
-        msg = "Iteration count should be {0}, found {1}".format(expect, count)
+        msg = "Iteration count should be {}, found {}".format(expect, count)
         self.assertTrue(count == expect, msg)
 
     def testLogic_04(self):
@@ -110,7 +110,7 @@ class TestRulesEngine(unittest.TestCase):
         self._re.dump(**kwargs)
         expect = 2
         count = self._re.getIterationCount()
-        msg = "Iteration count should be {0}, found {1}".format(expect, count)
+        msg = "Iteration count should be {}, found {}".format(expect, count)
         self.assertTrue(count == expect, msg)
 
     def _dummyMethod_01(self, **kwargs):
