@@ -55,17 +55,27 @@ class RulesEngine(object):
     or two branches are found and shall continue when all branches are
     exhausted and shall end when no further branches to traverse are found.
     """
+    NO_INST = 999999999
+
     def __init__(self, this=None, storeSeq=False):
         """
         :Keywords:
           this : ``InstanceType``
-            The object that the methods are called from.
+            The object that the methods are called from. If `this` is None the
+            `self` from the RulesEngine will be used. If `this` is an instance,
+            that instance will be used. If `this` is the special value
+            referred to by `RulesEngine.NO_INST` the node method is attached
+            to an instance and there is no need to define one.
           storeSeq : `bool`
             The default `False` will not store the call method sequence. Set
             to `True` if you want the call sequence stored. Then get it with
             the `getCallSequence` method.
         """
-        self._self = this is None and self or this
+        if this != RulesEngine.NO_INST:
+            self._self = this is None and self or this
+        else:
+            self._self = None
+
         self._root = None
         self._reset()
         self._storeSeq = storeSeq
@@ -154,7 +164,8 @@ class RulesEngine(object):
           A Boolean from a callable object.
         """
         self._iterCount += 1
-        result = node.method(self._self, **kwargs)
+        result = ((self._self is None) and node.method(**kwargs) or
+                  node.method(self._self, **kwargs))
         self._storeSeq and self._callSequence.append(node.method)
 
         if result:  # True take the left branch
