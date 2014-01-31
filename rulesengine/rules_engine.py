@@ -164,8 +164,12 @@ class RulesEngine(object):
           A Boolean from a callable object.
         """
         self._iterCount += 1
-        result = ((self._self is None) and node.method(**kwargs) or
-                  node.method(self._self, **kwargs))
+
+        if self._self is None:
+            result = node.method(**kwargs)
+        else:
+            result = node.method(self._self, **kwargs)
+
         self._storeSeq and self._callSequence.append(node.method)
 
         if result:  # True take the left branch
