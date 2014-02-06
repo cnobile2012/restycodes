@@ -170,7 +170,7 @@ class RulesEngine(object):
         else:
             result = node.method(self._self, **kwargs)
 
-        self._storeSeq and self._callSequence.append(node.method)
+        self._storeSeq and self._callSequence.append(node.method.__name__)
 
         if result:  # True take the left branch
             if isinstance(node.left, Node):
