@@ -20,9 +20,12 @@ email: carl.nobile@gmail.com
 """
 __docformat__ = "restructuredtext en"
 
+import types
 
 class RulesEngineException(Exception): pass
 class InvalidNodeSizeException(RulesEngineException): pass
+class InvalidSequenceTypeException(RulesEngineException): pass
+class InvalidCallTypeException(RulesEngineException): pass
 
 
 class Node(object):
@@ -120,8 +123,8 @@ class RulesEngine(object):
         size = len(blist)
 
         if size != 3:
-            msg = "Invalid sequence size, expected: 3, " + \
-                  "got: {}, on: {}".format(size, blist)
+            msg = ("Invalid sequence size, expected: 3, "
+                   "got: {}, on: {}").format(size, blist)
             raise InvalidNodeSizeException(msg)
 
         for i in range(size):
@@ -198,3 +201,37 @@ class RulesEngine(object):
           A `list` of the method objects in the order they were called.
         """
         return self._callSequence
+
+    def translateToCallNames(self, seq):
+        return self.__translateCall(seq)
+
+    def __translateCall(self, seq):
+        if not isinstance(seq, (list, tuple)):
+            msg = ("Invalid sequence type, expected list or tuple "
+                   "got: {}, on {}").format(type(seq), seq)
+            raise InvalidSequenceTypeException(msg)
+
+        if len(seq) != 3:
+            msg = ("Invalid sequence size, expected: 3, "
+                   "got: {}, on: {}").format(size, seq)
+            raise InvalidNodeSizeException(msg)
+
+        if not isinstance(seq[0], (types.FunctionType, types.MethodType)):
+            msg = ("Invalid call type, expected: function or method, "
+                   "got: {}, on: {}").format(type(seq[0]), seq)
+            raise InvalidCallTypeException(msg)
+
+        nextList = []
+        nextList.append(seq[0].__name__)
+
+        if isinstance(seq[1], (list, tuple)):
+            nextList.append(self.__translateCall(seq[1]))
+        else:
+            nextList.append(None)
+
+        if isinstance(seq[2], (list, tuple)):
+            nextList.append(self.__translateCall(seq[2]))
+        else:
+            nextList.append(None)
+
+        return nextList

@@ -113,6 +113,10 @@ class TestRulesEngine(unittest.TestCase):
         msg = "Iteration count should be {}, found {}".format(expect, count)
         self.assertTrue(count == expect, msg)
 
+    def testTranslateCallSequence(self):
+        result = self._re.translateToCallNames(TestRulesEngine.nodeTree)
+        print result
+
     def _dummyMethod_01(self, **kwargs):
         """
         Test method 1.
