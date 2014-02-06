@@ -382,7 +382,7 @@ class TestRestyCodes(unittest.TestCase):
             print
 
             for call in seq:
-                print call.__name__
+                print call
 
             print "Total Count: {}".format(len(seq))
 
